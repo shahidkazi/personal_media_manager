@@ -1,4 +1,7 @@
 # Personal Media Manager
+v1.0.0 (Released 24-November-2024)
+
+<img src="images/banner.png" />
 Python based Movie and TV Series collection manager
 
 Tired of trying to find a media manager for your DVDs, Blu-Rays and Downloads?
