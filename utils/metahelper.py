@@ -85,10 +85,22 @@ def add_new_genre(genre : str) -> int:
     Returns:
     int: The maximum genre ID after the new genre is added.
     """
-    execute_query(dbqueries.QUERY_ADD_GENRE.format(
-                    genre, 
-                    datetime.now().strftime('%d-%m-%Y %H:%M:%S')))
-    return int(execute_read(dbqueries.QUERY_GET_MAX_GENRE_ID)[0])
+    retry_count = 3
+
+    while retry_count > 0:
+        retry_count -= 1
+
+        df_genres = get_genres()
+        if genre not in df_genres[META_COLUMNS.GENRE].to_list():
+            execute_query(dbqueries.QUERY_ADD_GENRE.format(
+                            genre, 
+                            datetime.now().strftime('%d-%m-%Y %H:%M:%S')))
+    
+        df_genres = get_genres()
+        if genre in df_genres[META_COLUMNS.GENRE].to_list():
+            return int(df_genres.loc[df_genres[META_COLUMNS.GENRE] == genre, 'ID'].values[0])
+        
+    return 0
 
 
 def get_media_editions() -> pd.DataFrame:
@@ -188,11 +200,22 @@ def add_new_language(language : str) -> int:
     Returns:
     int: The ID of the newly added language.
     """
-    execute_query(dbqueries.QUERY_ADD_LANGUAGE.format(
-                    language, 
-                    datetime.now().strftime('%d-%m-%Y %H:%M:%S')))
+    retry_count = 3
+
+    while retry_count > 0:
+        retry_count -= 1
+
+        df = get_languages()
+        if language not in df[META_COLUMNS.LANGUAGE].to_list():
+            execute_query(dbqueries.QUERY_ADD_LANGUAGE.format(
+                            language, 
+                            datetime.now().strftime('%d-%m-%Y %H:%M:%S')))
     
-    return int(execute_read(dbqueries.QUERY_GET_MAX_GENRE_ID)[0])
+        df = get_languages()
+        if language in df[META_COLUMNS.LANGUAGE].to_list():
+            return int(df.loc[df[META_COLUMNS.LANGUAGE] == language, 'ID'].values[0])
+        
+    return 0
 
 
 def add_meta(meta_type : META_COLUMNS, meta_value : str) -> int:
