@@ -1,0 +1,16 @@
+{
+    "data" : [
+        {
+            "Title"  : "Export to CSV",
+            "Module" : "templates.exportdata.exportCSV"
+        },
+        {
+            "Title"  : "Export to XLSX",
+            "Module" : "templates.exportdata.exportXLSX"
+        },
+        {
+            "Title"  : "Export to JSON",
+            "Module" : "templates.exportdata.exportJSON"
+        }
+    ]
+}

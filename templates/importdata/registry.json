@@ -1,0 +1,16 @@
+{
+    "data" : [
+        {
+            "Type"   : "csv",
+            "Module" : "templates.importdata.importCSV"
+        },
+        {
+            "Type"   : "xlsx",
+            "Module" : "templates.importdata.importXLSX"
+        },
+        {
+            "Type"   : "json",
+            "Module" : "templates.importdata.importJSON"
+        }
+    ]
+}
