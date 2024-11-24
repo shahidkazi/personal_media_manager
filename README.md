@@ -13,15 +13,15 @@ So enjoy collecting and managing your Movies and TV Series...<br/><br/>
 <ul>
     <li>
         Add Movies and Tv Series from Media -> Add New menu or the '+' icon on the toolbar<br/><br/>
-        <img src="images/screens/001-movies.png" width="500" /><br/><br/>
-        <img src="images/screens/004-series.png" width="500" /><br/>
+        <img src="images/screens/001-movies.png" /><br/><br/>
+        <img src="images/screens/004-series.png" /><br/>
     </li>
     <li>Add custom Genres and Languages from the General Tab<br/></li>
     <li>Add/Remove Poster from the General Tab<br/></li>
     <li>
         Update any properties in the General, Media, Episodes tabs and use Update Media to Save<br/><br/>
-        <img src="images/screens/002-movie-media.png" width="500" /><br/><br/>
-        <img src="images/screens/003-movie-cast.png" width="500" /><br/>
+        <img src="images/screens/002-movie-media.png" /><br/><br/>
+        <img src="images/screens/003-movie-cast.png" /><br/>
     </li>
     <li>Use Media -> Delete or the Delete Icon on the Toolbar to delete movies / series (multi-select supported)<br/></li>
     <li>
@@ -30,7 +30,7 @@ So enjoy collecting and managing your Movies and TV Series...<br/><br/>
     </li>
     <li>
         Use Media -> Fetch Details or the IMDB icon to get details of the movie/series from IMDB (multi-select supported)<br/><br/>
-        <img src="images/screens/009-imdb.png" width="500" /><br/>
+        <img src="images/screens/009-imdb.png" /><br/>
     </li>
     <li>You can build custom scrapers and add to the templates directory following implementing the required methods and making an entry in registry.json<br/></li>
     <li>
@@ -42,7 +42,7 @@ So enjoy collecting and managing your Movies and TV Series...<br/><br/>
     <li>Publish is similar to export but with additional functionality. Have added a sample publisher for Firebase. You can build ones for creating web sites or publishing to other online sources<br/></li>
     <li>
         The Episodes Tab (only visible for series) you can view / add / delete episodes (multi-select supported except for edit)<br/><br/>
-        <img src="images/screens/005-series-episodes.png" width="500" /><br/>
+        <img src="images/screens/005-series-episodes.png" /><br/>
     </li>
     <li>The Media Tab lets you set media details for Movies and in case you have added a disc tag for the media shows you which other media has the same tag (on the same disc)<br/></li>
 </ul>
