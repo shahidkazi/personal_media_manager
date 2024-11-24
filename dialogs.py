@@ -148,7 +148,8 @@ class AddNewMediaDialog(QDialog):
                     failed_entries.append(media)
 
             if len(failed_entries) > 0:
-                self.writeStatus(f'Error adding: {', '.join(failed_entries)}', MESSAGE_TYPE.ERROR)
+                failed = ', '.join(failed_entries)
+                self.writeStatus(f'Error adding: {failed}', MESSAGE_TYPE.ERROR)
     
             self.close()
             self.parent.writeStatus('Entries added successfully...', MESSAGE_TYPE.INFO)
@@ -824,16 +825,16 @@ class FetchDetailsDialog(QDialog):
         isSuccessful (bool): A flag indicating whether the save operation was successful.
         """
         try:
-            current_row = self.selected[self.currentSelectedIndex].row()
+            prev_row    = self.selected[self.currentSelectedIndex].row()
             max_row     = self.selected[len(self.selected) - 1].row()
 
-            if current_row == max_row:
+            if prev_row == max_row:
                 self.parent.refreshMedia()
                 self.parent.writeStatus('Details fetched successfully...', MESSAGE_TYPE.INFO)
                 self.close()
             else:
-                while current_row == self.selected[self.currentSelectedIndex].row() \
-                    and self.currentSelectedIndex < len(self.selected) - 1:
+                current_row = self.selected[self.currentSelectedIndex].row()
+                while current_row == prev_row and self.currentSelectedIndex < len(self.selected) - 1:
                     self.currentSelectedIndex += 1
                     current_row = self.selected[self.currentSelectedIndex].row()
 

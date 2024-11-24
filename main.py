@@ -13,8 +13,6 @@ from mainwindow import MainWindow
 #=======================================================================
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    widget = MainWindow()
-
     app.setApplicationName("Personal Media Manager")
 
     app_icon = QIcon()
@@ -31,9 +29,9 @@ if __name__ == "__main__":
     splash.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
     splash.show()
 
-    QTimer.singleShot(3000, splash.close)
+    QTimer.singleShot(5000, splash.close)
 
-    main_window = MainWindow()
+    widget = MainWindow()
     QTimer.singleShot(3000, widget.showMaximized)
 
     sys.exit(app.exec())
