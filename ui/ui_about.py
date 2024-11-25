@@ -135,7 +135,7 @@ class Ui_AboutDialog(object):
         """
         AboutDialog.setWindowTitle(QCoreApplication.translate("AboutDialog", u"About", None))
         self.groupBox.setTitle("")
-        self.label.setText(QCoreApplication.translate("AboutDialog", u"Personal Media Manager v1.0.0", None))
+        self.label.setText(QCoreApplication.translate("AboutDialog", u"Personal Media Manager v1.0.3", None))
         self.label_2.setText(QCoreApplication.translate("AboutDialog", u"Simple open source utility created with the soul purpose of managing your media (movie/tv series) collection. There were quite a few paid applications out there but none seem catered to what was needed by us and the paid versions were charging a bomb if you needed to customize. Feel free to customize as you need, but not forget to include reference to yours truly.", None))
         self.label_3.setText(QCoreApplication.translate("AboutDialog", u"Email: shahidskazi@hotmail.com", None))
         self.label_4.setText(QCoreApplication.translate("AboutDialog", u"Instagram: @shahidscornerblog", None))
