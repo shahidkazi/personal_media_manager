@@ -36,6 +36,7 @@ from utils.constants import (
     SERIES_COLUMNS,
     EPISODE_COLUMNS,
     FILTER_COLUMNS,
+    APP_CONFIG,
     MESSAGE_TYPE,
     MOVIE_SUMMARY_DISPLAY_COLS,
     MOVIE_CUSTOM_COL_WIDTHS,
@@ -43,8 +44,7 @@ from utils.constants import (
     SERIES_EPISODE_DISPLAY_COLS,
     SERIES_CUSTOM_COL_WIDTHS,
     EPISODES_CUSTOM_COL_WIDTHS,
-    DEFAULT_POSTER,
-    DEFAULT_POSTER_PATH
+    DEFAULT_POSTER
 )
 
 
@@ -510,9 +510,8 @@ class MainWindow(QMainWindow):
         import os.path 
 
         try:
-            details     = data[MEDIA_DETAILS.CONTENT]
-
-            poster_path = DEFAULT_POSTER_PATH.format(media_type.lower()) + str(details[MEDIA_COLUMNS.ID][0]) + '.jpg'
+            details      = data[MEDIA_DETAILS.CONTENT]
+            poster_path  = f'{metahelper.get_app_config(APP_CONFIG.POSTER_PATH)}/{media_type.lower()}/{str(details[MEDIA_COLUMNS.ID][0])}.jpg'
             self.current_poster = poster_path if os.path.isfile(poster_path) else DEFAULT_POSTER
             
             self.ui.lblPoster.setPixmap(QPixmap(self.current_poster))

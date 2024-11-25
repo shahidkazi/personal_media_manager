@@ -38,8 +38,7 @@ from utils.constants    import (
     FILTER_COLUMNS,
     APP_CONFIG,
     MESSAGE_TYPE,
-    DEFAULT_POSTER,
-    DEFAULT_POSTER_PATH
+    DEFAULT_POSTER
 )
 
 #=======================================================================
@@ -696,6 +695,8 @@ class FetchDetailsDialog(QDialog):
 
         try:
             self.writeStatus('Searching...')
+            self.ui.btnFetch.setEnabled(False)
+            self.ui.btnSave.setEnabled(False)
             self.progressChanged.emit(0)
 
             module  = self.templates.loc[self.templates['Source'] == self.ui.cbSearchSource.currentText(), 'Module'].values[0]
@@ -726,9 +727,11 @@ class FetchDetailsDialog(QDialog):
                 self.writeStatus('No Movie found. Try searching with a different title value...', MESSAGE_TYPE.WARNING)
 
             self.ui.lblStatus.setText('')
+            self.ui.btnFetch.setEnabled(True)
             self.progressChanged.emit(100)
         except Exception as e:
             self.writeStatus(f'fetchMovieDetails: {e}', MESSAGE_TYPE.ERROR)
+            self.ui.btnFetch.setEnabled(True)
             self.progressChanged.emit(100)
 
 
@@ -775,6 +778,8 @@ class FetchDetailsDialog(QDialog):
 
         try:
             self.writeStatus('Fetching details...')
+            self.ui.btnFetch.setEnabled(False)
+            self.ui.btnSave.setEnabled(False)
             self.progressChanged.emit(0)
 
             module  = self.templates.loc[self.templates['Source'] == self.ui.cbSearchSource.currentText(), 'Module'].values[0]
@@ -802,9 +807,12 @@ class FetchDetailsDialog(QDialog):
             self.ui.lblPoster.setPixmap(poster_image)
 
             self.writeStatus('')
+            self.ui.btnFetch.setEnabled(True)
+            self.ui.btnSave.setEnabled(True)
             self.progressChanged.emit(100)
         except Exception as e:
             self.writeStatus(f'showDetails: {e}', MESSAGE_TYPE.ERROR)
+            self.ui.btnFetch.setEnabled(True)
             self.progressChanged.emit(100)
 
 
@@ -840,6 +848,7 @@ class FetchDetailsDialog(QDialog):
 
                 self.resetForm()
                 self.setSearchText()
+                self.fetchMovieDetails()
         except Exception as e:
             self.writeStatus(f'saveComplete: {e}', MESSAGE_TYPE.ERROR)
 
@@ -864,6 +873,8 @@ class FetchDetailsDialog(QDialog):
 
         try:
             self.writeStatus('Saving...')
+            self.ui.btnFetch.setEnabled(False)
+            self.ui.btnSave.setEnabled(False)
             self.progressChanged.emit(0)
 
             module     = self.templates.loc[self.templates['Source'] == self.ui.cbSearchSource.currentText(), 
@@ -937,7 +948,7 @@ class FetchDetailsDialog(QDialog):
             
             poster = self.selectedMedia[MEDIA_DETAILS.CONTENT][MEDIA_COLUMNS.POSTER_URL]
             if poster:
-                poster_path = DEFAULT_POSTER_PATH.format(self.media_type.lower()) + str(self.media_id) + '.jpg'
+                poster_path  = f'{metahelper.get_app_config(APP_CONFIG.POSTER_PATH)}/{self.media_type.lower()}/{str(self.media_id)}.jpg'
                 with open(poster_path, 'wb') as f:
                     f.write(requests.get(poster).content)
 
@@ -945,6 +956,9 @@ class FetchDetailsDialog(QDialog):
             self.saveFinished.emit(True)
         except Exception as e:
             self.writeStatus(f'saveMedia: {e}', MESSAGE_TYPE.ERROR)
+
+        self.ui.btnFetch.setEnabled(True)
+        self.ui.btnSave.setEnabled(True)
 
 
 #=======================================================================
@@ -1160,15 +1174,78 @@ class PreferencesDialog(QDialog):
         super().__init__(parent)
         self.ui = Ui_PreferencesDialog()
         self.ui.setupUi(self)
+        self.parent = parent
 
         self.ui.btnSave.clicked.connect(self.saveAppConfig)
         self.ui.btnCancel.clicked.connect(self.close)
+
+        self.ui.btnPrfPoster.clicked.connect(self.selectPosterPath)
+        self.ui.btnPrfLookup.clicked.connect(self.selectLookupPath)
+        self.ui.btnPrfPublish.clicked.connect(self.selectPublishPath)
+        self.ui.btnPrfImport.clicked.connect(self.selectImportPath)
+        self.ui.btnPrfExport.clicked.connect(self.selectExportPath)
 
         self.setGenreListView()
         self.setSourceListView()
         self.setEditionListView()
         self.setQualityListView()
+
+        self.ui.cbDefaultLookup.addItems(metahelper.get_templates(APP_CONFIG.LOOKUP_TEMPLATES)['Source'].to_list())
+        self.ui.cbDefaultPublish.addItems(metahelper.get_templates(APP_CONFIG.PUBLISH_TEMPLATES)['Publisher'].to_list())
+
         self.setAppConfig()
+
+
+    def getFolderPath(self) -> str:
+        """
+        Opens a dialog for the user to select a directory and returns the path of the selected directory.
+
+        Returns:
+        - str: The path of the selected directory as a string. If the user cancels the dialog, an empty string is returned.
+        """
+        dir_path = QFileDialog.getExistingDirectory(
+                        parent=self,
+                        caption="Select directory",
+                        directory=os.getenv("HOME"),
+                        options=QFileDialog.Option.DontUseNativeDialog,
+                    )
+        
+        return dir_path
+    
+
+    def selectPosterPath(self) -> None:
+        '''
+        Select the folder with the templates for saving posters
+        '''
+        self.ui.txtPrfPoster.setText(self.getFolderPath)
+
+
+    def selectLookupPath(self) -> None:
+        '''
+        Select the folder with the templates for Lookup functionality
+        '''
+        self.ui.txtPrfPoster.setText(self.getFolderPath)
+
+
+    def selectPublishPath(self) -> None:
+        '''
+        Select the folder with the templates for Publish functionality
+        '''
+        self.ui.txtPrfPublish.setText(self.getFolderPath)
+
+
+    def selectImportPath(self) -> None:
+        '''
+        Select the folder with the templates for Import functionality
+        '''
+        self.ui.txtPrfImport.setText(self.getFolderPath)
+
+
+    def selectExportPath(self) -> None:
+        '''
+        Select the folder with the templates for Export functionality
+        '''
+        self.ui.txtPrfExport.setText(self.getFolderPath)
 
 
     def writeStatus(self, message : str, message_type=MESSAGE_TYPE.INFO) -> None:
@@ -1242,6 +1319,8 @@ class PreferencesDialog(QDialog):
         """
         try:
             df = metahelper.get_app_config()
+            self.ui.txtPrfPoster.setText(df[APP_CONFIG.POSTER_PATH][0])
+
             self.ui.txtPrfLookup.setText(df[APP_CONFIG.LOOKUP_TEMPLATES][0])
             self.ui.cbDefaultLookup.setCurrentText(df[APP_CONFIG.DEFAULT_LOOKUP][0])
 
@@ -1259,13 +1338,21 @@ class PreferencesDialog(QDialog):
         Save Application configuration to the database
         """
         try:
+            poster_path = self.ui.txtPrfPoster.text()
+            poster_path = poster_path[:-1] if poster_path.endswith('/') else poster_path
+
+            for media in [MEDIA_TYPE.MOVIE.lower(), MEDIA_TYPE.SERIES.lower()]:
+                if not os.path.exists(f'{poster_path}/{media}'):
+                    os.mkdir(f'{poster_path}/{media}')
+
             metahelper.update_app_config(
                 export_template  = self.ui.txtPrfExport.text(),
                 import_template  = self.ui.txtPrfImport.text(),
                 lookup_template  = self.ui.txtPrfLookup.text(),
                 publish_template = self.ui.txtPrfPublish.text(),
                 default_lookup   = self.ui.cbDefaultLookup.currentText(),
-                default_publish  = self.ui.cbDefaultPublish.currentText()
+                default_publish  = self.ui.cbDefaultPublish.currentText(),
+                default_poster   = poster_path
             )
 
             genres = [self.ui.lsPrfGenres.item(row).text() for row in range(self.ui.lsPrfGenres.count())]
@@ -1278,9 +1365,9 @@ class PreferencesDialog(QDialog):
             metahelper.update_meta(META_COLUMNS.QUALITY, qualities)
 
             sources = [self.ui.lsPrfSources.item(row).text() for row in range(self.ui.lsPrfSources.count())]
-            metahelper.update_meta(META_COLUMNS.GENRE, sources)
+            metahelper.update_meta(META_COLUMNS.SOURCE, sources)
 
-            self.parent.ui.writeStatus('Preferences updated successfully...')
+            self.parent.writeStatus('Preferences updated successfully...')
             self.close()
         except Exception as e:
             self.writeStatus(f'saveAppConfig: {e}', MESSAGE_TYPE.ERROR)

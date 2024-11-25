@@ -16,9 +16,9 @@ from utils.constants   import (
     SERIES_COLUMNS,
     FILTER_COLUMNS,
     META_COLUMNS,
+    APP_CONFIG,
     MEDIA_BOOLEAN_COLUMNS,
-    MEDIA_FILTER_COLUMNS,
-    DEFAULT_POSTER_PATH
+    MEDIA_FILTER_COLUMNS
 )
 
 #=======================================================================
@@ -324,7 +324,7 @@ def delete_media(media_type : MEDIA_TYPE, media_id : int) -> bool:
         execute_query(dbqueries.QUERY_DELETE_SERIES_EPISODES.format(id=media_id))
         execute_query(dbqueries.QUERY_DELETE_SERIES.format(id=media_id))
 
-    poster_path = DEFAULT_POSTER_PATH.format(media_type.lower()) + str(media_id) + '.jpg'
+    poster_path  = f'{metahelper.get_app_config(APP_CONFIG.POSTER_PATH)}/{media_type.lower()}/{str(media_id)}.jpg'
     import os
     if os.path.exists(poster_path):
         os.remove(poster_path)
