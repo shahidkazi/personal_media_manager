@@ -16,14 +16,15 @@ from utils.constants import MEDIA_TYPE, MEDIA_COLUMNS, MEDIA_DETAILS, EPISODE_CO
 from templates.exportdata.exportCSV import export
 
 #=======================================================================
-INDEX_TEMPLATE      = '/Users/default/Downloads/movies/templates/index_template.html'
-RES_MOVIE_SUMMARY   = '/Users/default/Downloads/movies/data/results_summary.txt'
-RES_MOVIE_DASHBOARD = '/Users/default/Downloads/movies/data/results_{0}.txt'
-RES_MOVIE_DETAIL    = '/Users/default/Downloads/movies/data/{0}.txt'
-RES_SHOW_SUMNMARY   = '/Users/default/Downloads/movies/data/results_shows.txt'
-RES_SHOW_DETAIL     = '/Users/default/Downloads/movies/data/{0}.txt'
-WEB_APP_LOCATION    = '/Users/default/Downloads/'
-FIREBASE_SITE_ID    = 'personal-movie-db'
+FIREBASE_SITE_ID    = 'personal-media-db'
+WEB_APP_LOCATION    = '/Users/default/Downloads/Apps'
+
+INDEX_TEMPLATE      = f'{WEB_APP_LOCATION}/movies/templates/index_template.html'
+RES_MOVIE_SUMMARY   = f'{WEB_APP_LOCATION}/movies/data/results_summary.txt'
+RES_MOVIE_DASHBOARD = f'{WEB_APP_LOCATION}/movies/data/results_{0}.txt'
+RES_MOVIE_DETAIL    = f'{WEB_APP_LOCATION}/movies/data/{0}.txt'
+RES_SHOW_SUMNMARY   = f'{WEB_APP_LOCATION}/movies/data/results_shows.txt'
+RES_SHOW_DETAIL     = f'{WEB_APP_LOCATION}/movies/data/{0}.txt'
 
 col_rename      = {
     MEDIA_COLUMNS.ID               : 'TMDBID',
