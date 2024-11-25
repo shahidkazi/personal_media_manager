@@ -55,14 +55,16 @@ def update_app_config(**kwargs) -> None:
     - default_lookup (str): The default template for lookup operations.
     - default_publish (str): The default template for publishing operations.
     """
-    execute_query(dbqueries.QUERY_UPDATE_APP_CONFIG.format(
+    query = dbqueries.QUERY_UPDATE_APP_CONFIG.format(
         export_template  = kwargs['export_template'],
         import_template  = kwargs['import_template'],
         lookup_template  = kwargs['lookup_template'],
         publish_template = kwargs['publish_template'],
         default_lookup   = kwargs['default_lookup'],
         default_publish  = kwargs['default_publish'],
-    ))
+        default_poster   = kwargs['default_poster']
+    )
+    execute_query(query)
 
 
 def get_genres() -> pd.DataFrame:
@@ -294,7 +296,7 @@ def update_meta(meta_type : META_COLUMNS, meta_list) -> None:
     meta_to_add    = [x for x in meta_list if x not in existing_meta[meta_type].tolist()]
         
     for meta in meta_to_remove:
-        meta_id = existing_meta.loc[existing_meta[meta_type] == meta, 'ID'].get_values(0)
+        meta_id = existing_meta.loc[existing_meta[meta_type] == meta, 'ID'].values(0)
         for query in meta_mapping[meta_type]['delete_queries']:
             execute_query(query.format(id=meta_id))
 

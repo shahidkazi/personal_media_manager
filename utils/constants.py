@@ -3,9 +3,6 @@
 # Script for housing all the constants and configs that are static and
 # better to be centralized than hardcoded across the application  
 #=======================================================================
-from enum import Enum
-
-#=======================================================================
 class MEDIA_TYPE:
    '''
    Types of media supported in the application
@@ -148,6 +145,7 @@ class APP_CONFIG:
    '''
    Application Configuration ttributes available
    '''
+   POSTER_PATH       = 'DEFAULT_POSTER_PATH'
    EXPORT_TEMPLATES  = 'EXPORT_TEMPLATES'
    IMPORT_TEMPLATES  = 'IMPORT_TEMPLATES'
    LOOKUP_TEMPLATES  = 'LOOKUP_TEMPLATES'
@@ -160,7 +158,6 @@ class APP_CONFIG:
 #=======================================================================
 DEFAULT_DB_PATH                = 'data/moviedb.db'
 DEFAULT_POSTER                 = 'images/posters/noposter.jpg'
-DEFAULT_POSTER_PATH            = 'images/posters/{}/'
 
 DEFAULT_TEMPLATES_PATH         = 'templates'
 DEFAULT_EXPORT_TEMPLATES_PATH  = DEFAULT_TEMPLATES_PATH + '/exportdata'

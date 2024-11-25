@@ -16,15 +16,17 @@ QUERY_GET_APP_CONFIG            = '''SELECT ID,
                                             LOOKUP_TEMPLATES,
                                             PUBLISH_TEMPLATES,
                                             DEFAULT_LOOKUP,
-                                            DEFAULT_PUBLISH
+                                            DEFAULT_PUBLISH,
+                                            DEFAULT_POSTER_PATH
                                      FROM APP_CONFIG'''
 QUERY_UPDATE_APP_CONFIG         = '''UPDATE APP_CONFIG
-                                       SET EXPORT_TEMPLATES = {export_template},
-                                           IMPORT_TEMPLATES = {import_template},
-                                           LOOKUP_TEMPLATES = {lookup_template},
-                                           PUBLISH_TEMPLATES = {publish_template},
-                                           DEFAULT_LOOKUP = {default_lookup},
-                                           DEFAULT_PUBLISH = {default_publish}'''
+                                       SET EXPORT_TEMPLATES    = "{export_template}",
+                                           IMPORT_TEMPLATES    = "{import_template}",
+                                           LOOKUP_TEMPLATES    = "{lookup_template}",
+                                           PUBLISH_TEMPLATES   = "{publish_template}",
+                                           DEFAULT_LOOKUP      = "{default_lookup}",
+                                           DEFAULT_PUBLISH     = "{default_publish}",
+                                           DEFAULT_POSTER_PATH = "{default_poster}"'''
 
 QUERY_GET_GENRES                = 'SELECT ID, GENRE FROM GENRES ORDER BY GENRE'
 QUERY_ADD_GENRE                 = 'INSERT INTO GENRES (GENRE, CREATED_DATE) VALUES ("{}", "{}")'
