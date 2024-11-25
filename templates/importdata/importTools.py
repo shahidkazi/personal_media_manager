@@ -68,12 +68,12 @@ def save_movies(data : pd.DataFrame, column_map : dict) -> bool:
                 if col in [MEDIA_COLUMNS.LOOKUP_SOURCE, MEDIA_COLUMNS.SOURCE_URL] and col in column_map:
                     source_details[col] = row[column_map[col]] if pd.notnull(row[column_map[col]]) else None
                 else:
-                    if col == MEDIA_COLUMNS.QUALITY and row[col] is not None and MEDIA_COLUMNS.QUALITY_ID not in column_map:
-                        movie_details[MEDIA_COLUMNS.QUALITY_ID] = get_meta_id(col, row[col])
-                    elif col == MOVIE_COLUMNS.EDITION and row[col] is not None and MOVIE_COLUMNS.EDITION_ID not in column_map:
-                        movie_details[MOVIE_COLUMNS.EDITION_ID] = get_meta_id(col, row[col])
-                    elif col == MOVIE_COLUMNS.SOURCE and row[col] is not None and MOVIE_COLUMNS.SOURCE_ID not in column_map:
-                        movie_details[MOVIE_COLUMNS.SOURCE_ID] = get_meta_id(col, row[col])
+                    if col == MEDIA_COLUMNS.QUALITY and row[column_map[col]] is not None and MEDIA_COLUMNS.QUALITY_ID not in column_map:
+                        movie_details[MEDIA_COLUMNS.QUALITY_ID] = get_meta_id(col, row[column_map[col]])
+                    elif col == MOVIE_COLUMNS.EDITION and row[column_map[col]] is not None and MOVIE_COLUMNS.EDITION_ID not in column_map:
+                        movie_details[MOVIE_COLUMNS.EDITION_ID] = get_meta_id(col, row[column_map[col]])
+                    elif col == MOVIE_COLUMNS.SOURCE and row[column_map[col]] is not None and MOVIE_COLUMNS.SOURCE_ID not in column_map:
+                        movie_details[MOVIE_COLUMNS.SOURCE_ID] = get_meta_id(col, row[column_map[col]])
                     elif col not in [MEDIA_DETAILS.GENRES, MEDIA_DETAILS.LANGUAGES]:
                         movie_details[col] = row[column_map[col]] if pd.notnull(row[column_map[col]]) else None
 
