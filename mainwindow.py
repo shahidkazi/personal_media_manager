@@ -16,6 +16,7 @@ from dialogs import (
     AboutDialog,
     AddNewEpiodeDialog,
     AddNewMediaDialog,
+    BackupDialog,
     BulkUpdateDialog,
     ExportDialog,
     FAQsDialog,
@@ -178,6 +179,8 @@ class MainWindow(QMainWindow):
         self.ui.actionPreferences.triggered.connect(self.onPreferencesTriggered)
         self.ui.actionPublish.triggered.connect(self.onPublishTriggered)
         self.ui.actionUpdate.triggered.connect(self.updateMediaTriggered)
+        self.ui.actionBackup.triggered.connect(self.onBackupTriggered)
+        self.ui.actionRestore.triggered.connect(self.onRestoreTriggered)
 
 
     def setupFilters(self) -> None:
@@ -433,8 +436,15 @@ class MainWindow(QMainWindow):
         change event to display additional movie details.
         """
         try:
-            df, total  = model.get_media(MEDIA_TYPE.MOVIE, self.get_filters())
-            tableModel = TableModel(df)
+            v_scroll_pos = self.ui.tblMovies.verticalScrollBar().value()
+            h_scroll_pos = self.ui.tblMovies.horizontalScrollBar().value()
+
+            curr_idx     = self.ui.tblMovies.selectionModel().currentIndex().row() \
+                        if self.ui.tblMovies.selectionModel() and self.ui.tblMovies.selectionModel().currentIndex() \
+                      else 0
+
+            df, total    = model.get_media(MEDIA_TYPE.MOVIE, self.get_filters())
+            tableModel   = TableModel(df)
             self.ui.tblMovies.setModel(tableModel)
             self.ui.tblMovies.verticalHeader().hide()
             
@@ -452,7 +462,11 @@ class MainWindow(QMainWindow):
             
             self.ui.tblMovies.selectionModel().selectionChanged.connect(self.displayMovieDetails)
             if self.ui.tbSummary.currentIndex() == 0 and self.ui.tblMovies.model().rowCount() > 0:
-                self.ui.tblMovies.selectRow(0)
+                self.ui.tblMovies.selectRow(curr_idx)
+                self.ui.tblMovies.setFocus()
+
+            self.ui.tblMovies.verticalScrollBar().setValue(v_scroll_pos)
+            self.ui.tblMovies.horizontalScrollBar().setValue(h_scroll_pos)
 
             self.total_movies = total
             self.writeStats(len(df), total)
@@ -471,8 +485,15 @@ class MainWindow(QMainWindow):
         statistics related to the series.
         """
         try:
-            df, total  = model.get_media(MEDIA_TYPE.SERIES, self.get_filters())
-            tableModel = TableModel(df, MEDIA_TYPE.SERIES)
+            v_scroll_pos = self.ui.tblSeries.verticalScrollBar().value()
+            h_scroll_pos = self.ui.tblSeries.horizontalScrollBar().value()
+
+            curr_idx     = self.ui.tblSeries.selectionModel().currentIndex().row() \
+                        if self.ui.tblSeries.selectionModel() and self.ui.tblSeries.selectionModel().currentIndex() \
+                      else 0
+
+            df, total    = model.get_media(MEDIA_TYPE.SERIES, self.get_filters())
+            tableModel   = TableModel(df, MEDIA_TYPE.SERIES)
             self.ui.tblSeries.setModel(tableModel)
             self.ui.tblSeries.verticalHeader().hide()
             
@@ -491,7 +512,11 @@ class MainWindow(QMainWindow):
             
             self.ui.tblSeries.selectionModel().selectionChanged.connect(self.displaySeriesDetails)
             if self.ui.tbSummary.currentIndex() == 1 and self.ui.tblSeries.model().rowCount() > 0:
-                self.ui.tblSeries.selectRow(0)
+                self.ui.tblSeries.selectRow(curr_idx)
+                self.ui.tblSeries.setFocus()
+
+            self.ui.tblSeries.verticalScrollBar().setValue(v_scroll_pos)
+            self.ui.tblSeries.horizontalScrollBar().setValue(h_scroll_pos)
 
             self.total_series = total
             self.writeStats(len(df), total, MEDIA_TYPE.SERIES)
@@ -631,6 +656,9 @@ class MainWindow(QMainWindow):
             watched = len(data[MEDIA_COLUMNS.WATCHED].unique()) == 1 and data[MEDIA_COLUMNS.WATCHED][0] == 1
             self.ui.chkWatchedSeason.setChecked(watched)
 
+            v_scroll_pos = self.ui.tblEpisodes.verticalScrollBar().value()
+            h_scroll_pos = self.ui.tblEpisodes.horizontalScrollBar().value()
+
             tableModel = TableModel(data)
             self.ui.tblEpisodes.setModel(tableModel)
             self.ui.tblEpisodes.verticalHeader().hide()
@@ -651,7 +679,9 @@ class MainWindow(QMainWindow):
             self.resetEpisodeDetails()
 
             self.ui.tblEpisodes.selectionModel().selectionChanged.connect(self.displayEpisodeDetails)
-            self.ui.tblEpisodes.selectRow(0)
+
+            self.ui.tblEpisodes.verticalScrollBar().setValue(v_scroll_pos)
+            self.ui.tblEpisodes.horizontalScrollBar().setValue(h_scroll_pos)
         except Exception as e:
             self.writeStatus(f'setEpisodeTab: {e}', MESSAGE_TYPE.ERROR)
 
@@ -1415,6 +1445,10 @@ class MainWindow(QMainWindow):
             value (int): 1 for watched, 0 for not watched. Defaults to 1.
         """
         try:
+            curr_idx = self.ui.tblEpisodes.selectionModel().currentIndex().row() \
+                    if self.ui.tblEpisodes.selectionModel() and self.ui.tblEpisodes.selectionModel().currentIndex() \
+                  else 0
+
             episode_ids = set()
             for selected in self.ui.tblEpisodes.selectedIndexes():
                 episode_ids.add(
@@ -1446,6 +1480,9 @@ class MainWindow(QMainWindow):
                         genres          = None,
                         languages       = None)
                     self.displaySeries()
+
+                self.ui.tblEpisodes.selectRow(curr_idx)
+                self.ui.tblEpisodes.setFocus()
             else:   
                 self.writeStatus('No episode(s) selected!', MESSAGE_TYPE.WARNING)
         except Exception as e:
@@ -1526,6 +1563,22 @@ class MainWindow(QMainWindow):
         Opens a popup window to display the popup with additional filters when clicked.
         '''
         widget = FiltersDialog(parent=self)
+        widget.open()
+
+
+    def onBackupTriggered(self) -> None:
+        '''
+        Opens a popup window to backup the db to local file system.
+        '''
+        widget = BackupDialog(parent=self)
+        widget.open()
+
+
+    def onRestoreTriggered(self) -> None:
+        '''
+        Opens a popup window to restore the db to local file system.
+        '''
+        widget = BackupDialog(parent=self, mode='restore')
         widget.open()
 
 

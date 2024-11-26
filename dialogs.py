@@ -10,12 +10,23 @@ import utils.metahelper as metahelper
 
 from PySide6.QtCore     import Signal, QThreadPool, QRunnable, Slot, Qt, QRect
 from PySide6.QtGui      import QPixmap, QImage
-from PySide6.QtWidgets  import QDialog, QLabel, QFileDialog, QTableWidgetItem, QComboBox, QVBoxLayout, QHBoxLayout, QPushButton
+from PySide6.QtWidgets  import (
+    QDialog, 
+    QLabel, 
+    QFileDialog, 
+    QTableWidgetItem, 
+    QComboBox, 
+    QVBoxLayout, 
+    QHBoxLayout, 
+    QPushButton,
+    QMessageBox
+)
 
 from ui.ui_about        import Ui_AboutDialog
 from ui.ui_addmedia     import Ui_AddNewMedia
 from ui.ui_addepisode   import Ui_AddNewEpisode
 from ui.ui_bulkupdate   import Ui_BulkUpdateDialog
+from ui.ui_backup       import Ui_BackupDialog
 from ui.ui_export       import Ui_ExportDialog
 from ui.ui_faqs         import Ui_FAQDialog
 from ui.ui_fetchdetails import Ui_FetchDetailsDialog
@@ -38,7 +49,8 @@ from utils.constants    import (
     FILTER_COLUMNS,
     APP_CONFIG,
     MESSAGE_TYPE,
-    DEFAULT_POSTER
+    DEFAULT_POSTER,
+    DEFAULT_DB_PATH
 )
 
 #=======================================================================
@@ -1880,3 +1892,97 @@ class FiltersDialog(QDialog):
             self.close()
         except Exception as e:
             self.writeStatus(f'applyFilters: {e}', MESSAGE_TYPE.ERROR)
+
+
+#=======================================================================
+class BackupDialog(QDialog):
+
+    def __init__(self, clsUi=None, parent=None, mode='backup') -> None:
+        """
+        Initializes the AddNewMediaDialog class, which sets up the user interface for adding new media.
+
+        Parameters:
+        clsUi (optional): The UI class to be used for the dialog. Default is None.
+        parent (optional): The parent widget for this dialog. Default is None.
+        mode (optional): Whether the current mode is backup or restore. Default is Backup
+        """
+        super().__init__(parent)
+        self.parent = parent
+        self.ui = Ui_BackupDialog()
+        self.ui.setupUi(self)
+        self.mode = mode
+
+        self.ui.btnSave.clicked.connect(self.backupRestore)
+        self.ui.btnCancel.clicked.connect(self.close)
+        self.ui.btnSelect.clicked.connect(self.selectPath)
+
+    
+    def writeStatus(self, message : str, message_type=MESSAGE_TYPE.INFO) -> None:
+        """
+        Updates the status label with a given message and style.
+        
+        Parameters:
+            message (str): The status message to display.
+            message_type (str, optional): The type of message (MESSAGE_TYPE.INFO or MESSAGE_TYPE.ERROR) to determine the style.
+        """
+        self.ui.lblStatus.setStyleSheet(getStatusStyleSheet(message_type))
+        self.ui.lblStatus.setText(message)
+
+
+    def backupRestore(self) -> None:
+        """
+        Performs a backup or restore operation on the database file based on the current mode.
+
+        If the mode is 'backup', the method copies the database file from the default path to the path specified in the UI.
+        If the mode is not 'backup', it prompts the user for confirmation before restoring the database from the specified path.
+        """
+        import shutil
+        
+        try:
+            if self.mode == 'backup':
+                if os.path.exists(self.ui.txtPath.text().strip()):
+                    os.remove(self.ui.txtPath.text().strip())
+                shutil.copyfile(DEFAULT_DB_PATH, self.ui.txtPath.text().strip())
+                self.parent.writeStatus('Backup successful...')
+            else:
+                msg_box = QMessageBox(self)
+                msg_box.setWindowTitle('Restore Confirmation')
+                msg_box.setText('Are you sure? This will overwrite the existing database.')
+                msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                msg_box.setDefaultButton(QMessageBox.No)
+                custom_icon = QPixmap('images/icons/pmm-256.png')
+                msg_box.setIconPixmap(custom_icon)
+                
+                reply = msg_box.exec()
+
+                if reply == QMessageBox.Yes:
+                    shutil.copyfile(self.ui.txtPath.text().strip(), DEFAULT_DB_PATH)
+                    self.parent.refreshMedia()
+                    self.parent.writeStatus('Restore successful...')
+
+            self.close()
+        except Exception as e:
+            self.writeStatus(f'backupRestore: {e}', MESSAGE_TYPE.ERROR)
+
+
+    def selectPath(self) -> None:
+        """
+        Opens a file dialog for the user to select a file path based on the current mode of operation.
+        
+        If the mode is 'backup', a save file dialog is opened to specify the location for saving a backup file.
+        If the mode is not 'backup', an open file dialog is opened to select a file for restoration.
+        """
+        if self.mode == 'backup':
+            file_dialog = QFileDialog.getSaveFileName(self, 
+                                                      'Save Backup File', 
+                                                      'moviedb.db', 
+                                                      'SQLite Database (*.db)')
+        else:
+            file_dialog = QFileDialog.getOpenFileName(self, 
+                                                      'Select Restore File', 
+                                                      '', 
+                                                      'SQLite Database (*.db)')
+        
+        if file_dialog[0]:
+            self.ui.txtPath.setText(file_dialog[0])
+
