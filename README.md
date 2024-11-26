@@ -11,8 +11,6 @@ So I decided to build one, open source, so anyone can use and  extend as needed 
 
 So enjoy collecting and managing your Movies and TV Series...<br/><br/>
 
-https://github.com/shahidkazi/personal_media_manager/edit/main/README.md
-
 # Important Links
 - [What's New in v1.1.0?](#whats-new-in-v110)
 - [Current Features](#current-features)
@@ -72,11 +70,11 @@ Current releases are for Mac OS only, Windows and Linux coming soon. If you are 
 - For version older than v1.1.0
     - Open Finder
     - Go to Applications Folder
-    - Right Click Personal Media Manager and select 'Show Package Contents'
+    - Right Click 'Personal Media Manager vx.x.x' and select 'Show Package Contents'
     - Browse to the 'data' folder and copy 'moviedb.db' to another local folder
     - Delete the 'Personal Media Manager' app
-- For versoion v1.1.0+
-    - Start the appilication and Use Backup Functionality to backup your database to a local folder 
+- For version v1.1.0+
+    - Start the appilication and use 'Backup' functionality to backup your database to a local folder 
 
 
 <b>Next steps (New & Existing Upgrade)</b>
