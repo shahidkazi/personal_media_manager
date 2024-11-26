@@ -100,6 +100,22 @@ class Ui_MainWindow(object):
         self.actionExportData.setIcon(icon4)
         self.actionExportData.setIconVisibleInMenu(True)
         self.actionExportData.setShortcutVisibleInContextMenu(True)
+
+        self.actionBackup = QAction(MainWindow)
+        self.actionBackup.setObjectName(u"actionBackup")
+        iconb = QIcon()
+        iconb.addFile(u"images/icons/upload-solid.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.actionBackup.setIcon(iconb)
+        self.actionBackup.setIconVisibleInMenu(True)
+        self.actionBackup.setShortcutVisibleInContextMenu(True)
+        
+        self.actionRestore = QAction(MainWindow)
+        self.actionRestore.setObjectName(u"actionRestore")
+        iconr = QIcon()
+        iconr.addFile(u"images/icons/download-solid.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.actionRestore.setIcon(iconr)
+        self.actionRestore.setIconVisibleInMenu(True)
+        self.actionRestore.setShortcutVisibleInContextMenu(True)
         
         self.actionPublish = QAction(MainWindow)
         self.actionPublish.setObjectName(u"actionPublish")
@@ -108,13 +124,6 @@ class Ui_MainWindow(object):
         self.actionPublish.setIcon(icon5)
         self.actionPublish.setIconVisibleInMenu(True)
         self.actionPublish.setShortcutVisibleInContextMenu(True)
-        
-        self.actionBackup = QAction(MainWindow)
-        self.actionBackup.setObjectName(u"actionBackup")
-        icon6 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSave))
-        self.actionBackup.setIcon(icon6)
-        self.actionBackup.setIconVisibleInMenu(True)
-        self.actionBackup.setShortcutVisibleInContextMenu(True)
         
         self.actionFAQs = QAction(MainWindow)
         self.actionFAQs.setObjectName(u"actionFAQs")
@@ -1075,6 +1084,8 @@ class Ui_MainWindow(object):
         self.menu_File.addSeparator()
         self.menu_File.addAction(self.actionPublish)
         self.menu_File.addSeparator()
+        self.menu_File.addAction(self.actionBackup)
+        self.menu_File.addAction(self.actionRestore)
         
         self.menuMedia.addAction(self.actionAddNew)
         self.menuMedia.addAction(self.actionUpdate)
@@ -1098,6 +1109,9 @@ class Ui_MainWindow(object):
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionImportData)
         self.toolBar.addAction(self.actionExportData)
+        self.toolBar.addSeparator()
+        self.toolBar.addAction(self.actionBackup)
+        self.toolBar.addAction(self.actionRestore)
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionPreferences)
         self.toolBar.addAction(self.actionFAQs)
@@ -1172,6 +1186,9 @@ class Ui_MainWindow(object):
 
         self.actionBackup.setText(QCoreApplication.translate("MainWindow", u"&Backup", None))
         self.actionBackup.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+B", None))
+
+        self.actionRestore.setText(QCoreApplication.translate("MainWindow", u"&Restore", None))
+        self.actionRestore.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+R", None))
 
         self.actionFAQs.setText(QCoreApplication.translate("MainWindow", u"&FAQs", None))
         self.actionFAQs.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+H", None))
