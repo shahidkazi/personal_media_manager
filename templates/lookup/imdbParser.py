@@ -88,7 +88,7 @@ def get_media_details(online_id : str):
         MEDIA_COLUMNS.CERTIFICATION  : rating
     }
 
-    if media.get('kind') == 'movie':
+    if media.get('kind') in ['movie', 'short']:
         directors = '' if 'director' not in media else ', '.join([director['name'] for director in media['director']])
         writers   = []
         if media.get('writers', '') != '':
