@@ -555,6 +555,9 @@ class FetchDetailsDialog(QDialog):
     progressChanged = Signal(int)
     noMovieFound    = Signal(str)
     saveFinished    = Signal(bool)
+    threadUpdates   = Signal(bool, bool, bool)
+    sendStatus      = Signal(str, MEDIA_TYPE)
+
 
     def __init__(self, clsUi=None, parent=None) -> None:
         """
@@ -592,17 +595,11 @@ class FetchDetailsDialog(QDialog):
         self.setSearchText()
         
         self.progressChanged.connect(self.ui.prgStatus.setValue)
-        self.noMovieFound.connect(self.showMessage)
+        self.sendStatus.connect(self.writeStatus)
         self.saveFinished.connect(self.saveComplete)
+        self.threadUpdates.connect(self.manageControls)
 
         self.fetchDetails()
-
-    
-    def showMessage(self, message : str) -> None:
-        '''
-        Signal triggered class for printing progress messages
-        '''
-        self.writeStatus(message, MESSAGE_TYPE.WARNING)
 
 
     def writeStatus(self, message : str, message_type=MESSAGE_TYPE.INFO) -> None:
@@ -634,7 +631,9 @@ class FetchDetailsDialog(QDialog):
                                           getColIndexinTableView(self.tblParent, MEDIA_COLUMNS.ID)).data()
             media_title   = media.sibling(media.row(), 
                                           getColIndexinTableView(self.tblParent, MEDIA_COLUMNS.TITLE)).data()
-            self.ui.txtSearchTitle.setText(media_title)
+            year          = media.sibling(media.row(), 
+                                          getColIndexinTableView(self.tblParent, MEDIA_COLUMNS.YEAR)).data()
+            self.ui.txtSearchTitle.setText(media_title + (f' {year}' if year else ''))
         except Exception as e:
             self.writeStatus(f'setSearchText: {e}', MESSAGE_TYPE.ERROR)
 
@@ -685,6 +684,15 @@ class FetchDetailsDialog(QDialog):
         self.threadpool.start(self.worker)
 
 
+    def manageControls(self, diableGrid=True, enableFetch=False, enableSave=False) -> None:
+        '''
+        Disables Search and Save buttons while worker thread is operating
+        '''
+        self.ui.tblSearchResults.setDisabled(diableGrid)
+        self.ui.btnFetch.setEnabled(enableFetch)
+        self.ui.btnSave.setEnabled(enableSave)
+
+
     def fetchMovieDetails(self) -> None:
         """
         Fetches movie details based on the current search source and search title input by the user.
@@ -706,9 +714,8 @@ class FetchDetailsDialog(QDialog):
         from PySide6.QtWidgets import QHeaderView
 
         try:
-            self.writeStatus('Searching...')
-            self.ui.btnFetch.setEnabled(False)
-            self.ui.btnSave.setEnabled(False)
+            self.writeStatus('Searching...', MESSAGE_TYPE.INFO)
+            self.threadUpdates.emit(True, False, False)
             self.progressChanged.emit(0)
 
             module  = self.templates.loc[self.templates['Source'] == self.ui.cbSearchSource.currentText(), 'Module'].values[0]
@@ -731,19 +738,19 @@ class FetchDetailsDialog(QDialog):
                     self.ui.tblSearchResults.setColumnHidden(col, True)
 
                 self.progressChanged.emit(75)
-                self.writeStatus('')
+                self.sendStatus.emit('', MESSAGE_TYPE.INFO)
 
                 self.ui.tblSearchResults.selectionModel().selectionChanged.connect(self.showMediaDetails)
                 self.ui.tblSearchResults.selectRow(0)
             else:
-                self.writeStatus('No Movie found. Try searching with a different title value...', MESSAGE_TYPE.WARNING)
+                self.sendStatus.emit('No Movie found. Try searching with a different title value...', MESSAGE_TYPE.WARNING)
 
-            self.ui.lblStatus.setText('')
-            self.ui.btnFetch.setEnabled(True)
+            self.sendStatus.emit('', MESSAGE_TYPE.INFO)
+            self.threadUpdates.emit(False, True, False)
             self.progressChanged.emit(100)
         except Exception as e:
-            self.writeStatus(f'fetchMovieDetails: {e}', MESSAGE_TYPE.ERROR)
-            self.ui.btnFetch.setEnabled(True)
+            self.sendStatus.emit(f'fetchMovieDetails: {e}', MESSAGE_TYPE.ERROR)
+            self.threadUpdates.emit(False, True, False)
             self.progressChanged.emit(100)
 
 
@@ -789,9 +796,8 @@ class FetchDetailsDialog(QDialog):
         import importlib
 
         try:
-            self.writeStatus('Fetching details...')
-            self.ui.btnFetch.setEnabled(False)
-            self.ui.btnSave.setEnabled(False)
+            self.sendStatus.emit('Fetching details...', MESSAGE_TYPE.INFO)
+            self.threadUpdates.emit(True, False, False)
             self.progressChanged.emit(0)
 
             module  = self.templates.loc[self.templates['Source'] == self.ui.cbSearchSource.currentText(), 'Module'].values[0]
@@ -818,13 +824,12 @@ class FetchDetailsDialog(QDialog):
             self.ui.lblPoster.setScaledContents(True)
             self.ui.lblPoster.setPixmap(poster_image)
 
-            self.writeStatus('')
-            self.ui.btnFetch.setEnabled(True)
-            self.ui.btnSave.setEnabled(True)
+            self.sendStatus.emit('', MESSAGE_TYPE.INFO)
+            self.threadUpdates.emit(False, True, True)
             self.progressChanged.emit(100)
         except Exception as e:
-            self.writeStatus(f'showDetails: {e}', MESSAGE_TYPE.ERROR)
-            self.ui.btnFetch.setEnabled(True)
+            self.sendStatus.emit(f'showDetails: {e}', MESSAGE_TYPE.ERROR)
+            self.threadUpdates.emit(False, True, False)
             self.progressChanged.emit(100)
 
 
@@ -884,9 +889,8 @@ class FetchDetailsDialog(QDialog):
         import importlib
 
         try:
-            self.writeStatus('Saving...')
-            self.ui.btnFetch.setEnabled(False)
-            self.ui.btnSave.setEnabled(False)
+            self.sendStatus.emit('Saving...', MESSAGE_TYPE.INFO)
+            self.threadUpdates.emit(True, False, False)
             self.progressChanged.emit(0)
 
             module     = self.templates.loc[self.templates['Source'] == self.ui.cbSearchSource.currentText(), 
@@ -908,7 +912,7 @@ class FetchDetailsDialog(QDialog):
                     self.selectedMedia[MEDIA_DETAILS.GENRES], 
                     self.selectedMedia[MEDIA_DETAILS.LANGUAGES] )
             else:
-                self.writeStatus('Updating Episodes...')
+                self.sendStatus.emit('Updating Episodes...', MESSAGE_TYPE.INFO)
                 model.update_series(
                     self.selectedMedia[MEDIA_DETAILS.CONTENT], 
                     self.selectedMedia[MEDIA_DETAILS.OTHERS], 
@@ -967,10 +971,9 @@ class FetchDetailsDialog(QDialog):
             self.progressChanged.emit(100)
             self.saveFinished.emit(True)
         except Exception as e:
-            self.writeStatus(f'saveMedia: {e}', MESSAGE_TYPE.ERROR)
+            self.sendStatus.emit(f'saveMedia: {e}', MESSAGE_TYPE.ERROR)
 
-        self.ui.btnFetch.setEnabled(True)
-        self.ui.btnSave.setEnabled(True)
+        self.threadUpdates.emit(False, True, True)
 
 
 #=======================================================================

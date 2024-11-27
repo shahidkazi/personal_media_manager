@@ -81,7 +81,7 @@ def get_media_details(online_id : str):
     data   = {
         MEDIA_COLUMNS.ORIGINAL_TITLE : media.get('title'),
         MEDIA_COLUMNS.YEAR           : media.get('year', ''),
-        MEDIA_COLUMNS.PLOT           : media.get('plot', [''])[0],
+        MEDIA_COLUMNS.PLOT           : media.get('plot', [''])[0].replace('"', ''),
         MEDIA_COLUMNS.POSTER_URL     : media.get('full-size cover url', None),
         MEDIA_COLUMNS.COUNTRY        : ', '.join(media.get('countries', [])),
         MEDIA_COLUMNS.ONLINE_RATING  : media.get('rating', 0.0),
