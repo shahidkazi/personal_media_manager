@@ -88,6 +88,20 @@ def get_media_details(online_id : str):
         MEDIA_COLUMNS.CERTIFICATION  : rating
     }
 
+    if data[MEDIA_COLUMNS.POSTER_URL]:
+        size = requests.get(data[MEDIA_COLUMNS.POSTER_URL], stream = True).headers['Content-length']
+        if size and int(size) > 8000000:
+            cover_url = media.get('cover url', None)
+            url_split = cover_url.split('@')
+            url_parts = ['@']
+            for i in url_split[1]:
+                url_parts.append(i)
+                if i == 'Y':
+                    url_parts.append('2000_.jpg')
+                    break
+
+            data[MEDIA_COLUMNS.POSTER_URL] = url_split[0] + ''.join(url_parts)
+
     if media.get('kind') in ['movie', 'short']:
         directors = '' if 'director' not in media else ', '.join([director['name'] for director in media['director']])
         writers   = []
