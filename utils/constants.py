@@ -172,7 +172,7 @@ DEFAULT_PUBLISH_TEMPLATES_PATH = DEFAULT_TEMPLATES_PATH + '/publish'
 MEDIA_FILTER_COLUMNS           = { MEDIA_TYPE.MOVIE : {
                                        FILTER_COLUMNS.BACKUP_DISC : 'm.BACKUP_DISC',
                                        FILTER_COLUMNS.SOURCE      : 'm.SOURCE_ID',
-                                       FILTER_COLUMNS.QUALITY     : 'q.QUALITY',
+                                       FILTER_COLUMNS.QUALITY     : 'm.QUALITY_ID',
                                        FILTER_COLUMNS.EDITION     : 'm.EDITION_ID',
                                        FILTER_COLUMNS.TO_BURN     : 'm.TO_BURN',
                                        FILTER_COLUMNS.WATCHED     : 'm.WATCHED',

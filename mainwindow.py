@@ -378,7 +378,7 @@ class MainWindow(QMainWindow):
             self.writeStatus(f'setDiscFilter: {e}', MESSAGE_TYPE.ERROR)
 
 
-    def get_filters(self) -> dict:
+    def get_filters(self, isSeries=False) -> dict:
         """
         Constructs a dictionary of filters based on the current state of the UI elements.
 
@@ -414,8 +414,8 @@ class MainWindow(QMainWindow):
                 if self.ui.cbFilterDiscNo.currentIndex() > 0:
                     filters[FILTER_COLUMNS.BACKUP_DISC] = self.ui.cbFilterDiscNo.currentText()
 
-                if self.ui.cbFilterQuality.isEnabled() and self.ui.cbFilterQuality.currentIndex() > 0:
-                    filters[FILTER_COLUMNS.QUALITY] = self.ui.cbFilterQuality.currentText()
+                if self.ui.cbFilterQuality.isEnabled() and self.ui.cbFilterQuality.currentIndex() > 0 and not isSeries:
+                    filters[FILTER_COLUMNS.QUALITY] = self.ui.cbFilterQuality.currentData()
 
                 if len(self.additional_filters) > 0:
                     filters.update(self.additional_filters)
@@ -492,7 +492,7 @@ class MainWindow(QMainWindow):
                         if self.ui.tblSeries.selectionModel() and self.ui.tblSeries.selectionModel().currentIndex() \
                       else 0
 
-            df, total    = model.get_media(MEDIA_TYPE.SERIES, self.get_filters())
+            df, total    = model.get_media(MEDIA_TYPE.SERIES, self.get_filters(True))
             tableModel   = TableModel(df, MEDIA_TYPE.SERIES)
             self.ui.tblSeries.setModel(tableModel)
             self.ui.tblSeries.verticalHeader().hide()

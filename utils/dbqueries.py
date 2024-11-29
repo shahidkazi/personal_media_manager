@@ -155,8 +155,8 @@ QUERY_GET_MOVIE_DISCS           = '''SELECT DISTINCT BACKUP_DISC
                                      WHERE BACKUP_DISC IS NOT NULL
                                      ORDER BY BACKUP_DISC'''
 
-QUERY_ADD_NEW_MOVIE             = '''INSERT INTO MOVIES (TITLE, CREATED_DATE, UPDATED_DATE)
-                                     VALUES ("{0}", "{1}", "{2}")'''
+QUERY_ADD_NEW_MOVIE             = '''INSERT INTO MOVIES (TITLE, SOURCE_ID, QUALITY_ID, EDITION_ID, CREATED_DATE, UPDATED_DATE)
+                                     VALUES ("{0}", 1, 1, 1, "{1}", "{2}")'''
 
 QUERY_DELETE_MOVIE_CAST         = '''DELETE FROM MOVIE_CAST WHERE MOVIE_ID={id}'''
 QUERY_DELETE_MOVIE_LANGUAGES    = '''DELETE FROM MOVIE_LANGUAGES WHERE MOVIE_ID={id}'''
@@ -310,11 +310,11 @@ QUERY_GET_SERIES_DISCS          = '''SELECT DISTINCT BACKUP_DISC
                                      WHERE BACKUP_DISC IS NOT NULL
                                      ORDER BY BACKUP_DISC'''
 
-QUERY_ADD_NEW_SERIES            = '''INSERT INTO TV_SERIES (TITLE, CREATED_DATE, UPDATED_DATE)
-                                     VALUES ("{0}", "{1}", "{2}")'''
+QUERY_ADD_NEW_SERIES            = '''INSERT INTO TV_SERIES (TITLE, SOURCE_ID, CREATED_DATE, UPDATED_DATE)
+                                     VALUES ("{0}", 1, "{1}", "{2}")'''
 
-QUERY_ADD_NEW_EPISODE            = '''INSERT INTO TV_SERIES_EPISODES (SEASON, EPISODE, TITLE, SERIES_ID, PLOT, RELEASE_DATE, CREATED_DATE, UPDATED_DATE)
-                                     VALUES ({0}, {1}, "{2}", {3}, "{4}", "{5}", "{6}", "{7}")'''
+QUERY_ADD_NEW_EPISODE            = '''INSERT INTO TV_SERIES_EPISODES (SEASON, EPISODE, TITLE, SERIES_ID, PLOT, RELEASE_DATE, QUALITY_ID, CREATED_DATE, UPDATED_DATE)
+                                     VALUES ({0}, {1}, "{2}", {3}, "{4}", "{5}", 1, "{6}", "{7}")'''
 
 QUERY_DELETE_SERIES_CAST        = '''DELETE FROM TV_SERIES_CAST WHERE SERIES_ID={id}'''
 QUERY_DELETE_SERIES_LANGUAGES   = '''DELETE FROM TV_SERIES_LANGUAGES WHERE SERIES_ID={id}'''

@@ -30,6 +30,8 @@ COL_MAPPING       = {
     'Plot'     : MEDIA_COLUMNS.PLOT,
 }
 
+MOVIE_TYPES       = ['movie', 'short', 'video movie', 'tv special']
+
 #=======================================================================
 def search_media(title : str) -> pd.DataFrame:
     """
@@ -76,7 +78,14 @@ def get_media_details(online_id : str):
     rating    = 'Unknown' if 'certificates' not in media \
                 else [c for c in media['certificates'] if c.startswith('United States:')]
     if isinstance(rating, list):
-        rating = rating[0].split(':')[1].strip() if len(rating) > 0 else 'Unknown'
+        if len(rating) == 0:
+            rating = 'Unknown'
+        elif media.get('kind') in MOVIE_TYPES:
+            media_rating = [x.split(':')[1].strip() for x in rating if 'TV' not in x]
+            rating       = media_rating[0] if len(media_rating) > 0 else rating[0]
+            rating       = media_rating[1] if len(media_rating) > 1 and rating == 'Not Rated' else rating
+        else:
+            rating = rating[0].split(':')[1].strip()
     
     data   = {
         MEDIA_COLUMNS.ORIGINAL_TITLE : media.get('title'),
@@ -90,7 +99,7 @@ def get_media_details(online_id : str):
 
     if data[MEDIA_COLUMNS.POSTER_URL]:
         size = requests.get(data[MEDIA_COLUMNS.POSTER_URL], stream = True).headers['Content-length']
-        if size and int(size) > 8000000:
+        if size and int(size) > 4000000 and '@' in data[MEDIA_COLUMNS.POSTER_URL]:
             cover_url = media.get('cover url', None)
             url_split = cover_url.split('@')
             url_parts = ['@']
@@ -102,7 +111,7 @@ def get_media_details(online_id : str):
 
             data[MEDIA_COLUMNS.POSTER_URL] = url_split[0] + ''.join(url_parts)
 
-    if media.get('kind') in ['movie', 'short']:
+    if media.get('kind') in MOVIE_TYPES:
         directors = '' if 'director' not in media else ', '.join([director['name'] for director in media['director']])
         writers   = []
         if media.get('writers', '') != '':
