@@ -17,10 +17,12 @@ So enjoy collecting and managing your Movies and TV Series...<br/><br/>
 - [Installation](#installation)
 - [Plans for the Future](#plans-for-the-future)
 
-# What's New in v1.1.0?
+# What's New in v1.1.2?
 
-- The Movie/Series/Episode list does not scroll back to top after refreshing post update/fetch and other operations
-- Added support for Backup and Restore of the database. Helpful when upgrading to newer versions which is currently manual<br/><br/>
+- Fixed issues with downloading large sized images from IMDB
+- Added support for Shorts, Video Movies, TV Movies and TV Specials in Movies section when fetching from IMDB
+- Addressed multi-threading issues causing app to crash when fetch IMDB details for a large set
+- Fixed issue with searching by quality<br/><br/>
 
 # Current Features
 
@@ -85,6 +87,7 @@ Current releases are for Mac OS only, Windows and Linux coming soon. If you are 
 
 # What's planned for the future
 
+- Support for sorting by different dimensions
 - Support for backing up and restoring database from your personal cloud
 - Releases for Windows and Linux
 - Updating app from within instead of having to manually rebuild/replace with DB backup<br/><br/>
