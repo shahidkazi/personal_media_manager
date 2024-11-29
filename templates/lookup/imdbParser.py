@@ -30,7 +30,7 @@ COL_MAPPING       = {
     'Plot'     : MEDIA_COLUMNS.PLOT,
 }
 
-MOVIE_TYPES       = ['movie', 'short', 'video movie', 'tv special']
+MOVIE_TYPES       = ['movie', 'short', 'video movie', 'tv special', 'tv movie']
 
 #=======================================================================
 def search_media(title : str) -> pd.DataFrame:
