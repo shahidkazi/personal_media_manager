@@ -234,7 +234,7 @@ SERIES_CUSTOM_COL_WIDTHS      = { MEDIA_COLUMNS.YEAR     : 50,
                                   MEDIA_COLUMNS.WATCHED  : 25,
                                   MEDIA_COLUMNS.TO_BURN  : 25,
                                   MEDIA_COLUMNS.RATING   : 50,
-                                  SERIES_COLUMNS.SEASONS : 60 }
+                                  SERIES_COLUMNS.SEASONS : 70 }
 
 ''' Columns to be displayed for TV Series in the main UI '''
 SERIES_EPISODE_DISPLAY_COLS   = [ EPISODE_COLUMNS.SEASON,

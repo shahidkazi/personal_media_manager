@@ -10,6 +10,7 @@ from ui.ui_form        import Ui_MainWindow
 from utils.common      import getColIndexinTableView, getStatusStyleSheet
 
 from PySide6.QtGui     import QPixmap
+from PySide6.QtCore    import Qt, QSortFilterProxyModel
 from PySide6.QtWidgets import QMainWindow, QMessageBox, QHeaderView, QLabel, QFileDialog
 
 from dialogs import (
@@ -445,7 +446,12 @@ class MainWindow(QMainWindow):
 
             df, total    = model.get_media(MEDIA_TYPE.MOVIE, self.get_filters())
             tableModel   = TableModel(df)
-            self.ui.tblMovies.setModel(tableModel)
+
+            proxy_model = QSortFilterProxyModel()
+            proxy_model.setSourceModel(tableModel)
+
+            self.ui.tblMovies.setModel(proxy_model)
+            self.ui.tblMovies.setSortingEnabled(True)
             self.ui.tblMovies.verticalHeader().hide()
             
             displayCols = list(x for x in MOVIE_SUMMARY_DISPLAY_COLS)
@@ -456,9 +462,9 @@ class MainWindow(QMainWindow):
             for col in MOVIE_CUSTOM_COL_WIDTHS:
                 self.ui.tblMovies.setColumnWidth(df.columns.get_loc(col), MOVIE_CUSTOM_COL_WIDTHS[col])
 
-            self.ui.tblMovies.horizontalHeader().setSectionResizeMode(
-                df.columns.get_loc(MEDIA_COLUMNS.TITLE), 
-                QHeaderView.Stretch )
+            title_idx = df.columns.get_loc(MEDIA_COLUMNS.TITLE)
+            self.ui.tblMovies.sortByColumn(title_idx, Qt.AscendingOrder)
+            self.ui.tblMovies.horizontalHeader().setSectionResizeMode(title_idx, QHeaderView.Stretch)
             
             self.ui.tblMovies.selectionModel().selectionChanged.connect(self.displayMovieDetails)
             if self.ui.tbSummary.currentIndex() == 0 and self.ui.tblMovies.model().rowCount() > 0:
@@ -494,7 +500,11 @@ class MainWindow(QMainWindow):
 
             df, total    = model.get_media(MEDIA_TYPE.SERIES, self.get_filters(True))
             tableModel   = TableModel(df, MEDIA_TYPE.SERIES)
-            self.ui.tblSeries.setModel(tableModel)
+            proxy_model  = QSortFilterProxyModel()
+            proxy_model.setSourceModel(tableModel)
+
+            self.ui.tblSeries.setModel(proxy_model)
+            self.ui.tblSeries.setSortingEnabled(True)
             self.ui.tblSeries.verticalHeader().hide()
             
             displayCols = list(x for x in SERIES_SUMMARY_DISPLAY_COLS)
@@ -506,9 +516,9 @@ class MainWindow(QMainWindow):
                     df.columns.get_loc(col), 
                     SERIES_CUSTOM_COL_WIDTHS[col] )
 
-            self.ui.tblSeries.horizontalHeader().setSectionResizeMode(
-                df.columns.get_loc(MEDIA_COLUMNS.TITLE), 
-                QHeaderView.Stretch )
+            title_idx = df.columns.get_loc(MEDIA_COLUMNS.TITLE)
+            self.ui.tblSeries.sortByColumn(title_idx, Qt.AscendingOrder)
+            self.ui.tblSeries.horizontalHeader().setSectionResizeMode(title_idx, QHeaderView.Stretch)
             
             self.ui.tblSeries.selectionModel().selectionChanged.connect(self.displaySeriesDetails)
             if self.ui.tbSummary.currentIndex() == 1 and self.ui.tblSeries.model().rowCount() > 0:
@@ -659,8 +669,12 @@ class MainWindow(QMainWindow):
             v_scroll_pos = self.ui.tblEpisodes.verticalScrollBar().value()
             h_scroll_pos = self.ui.tblEpisodes.horizontalScrollBar().value()
 
-            tableModel = TableModel(data)
-            self.ui.tblEpisodes.setModel(tableModel)
+            tableModel   = TableModel(data)
+            proxy_model  = QSortFilterProxyModel()
+            proxy_model.setSourceModel(tableModel)
+
+            self.ui.tblEpisodes.setModel(proxy_model)
+            self.ui.tblEpisodes.setSortingEnabled(True)
             self.ui.tblEpisodes.verticalHeader().hide()
 
             displayCols = list(x for x in SERIES_EPISODE_DISPLAY_COLS)
@@ -672,9 +686,9 @@ class MainWindow(QMainWindow):
                     data.columns.get_loc(col), 
                     EPISODES_CUSTOM_COL_WIDTHS[col] )
 
-            self.ui.tblEpisodes.horizontalHeader().setSectionResizeMode(
-                data.columns.get_loc(MEDIA_COLUMNS.TITLE), 
-                QHeaderView.Stretch )
+            title_idx = data.columns.get_loc(MEDIA_COLUMNS.TITLE)
+            self.ui.tblEpisodes.sortByColumn(title_idx, Qt.AscendingOrder)
+            self.ui.tblEpisodes.horizontalHeader().setSectionResizeMode(title_idx, QHeaderView.Stretch)
             
             self.resetEpisodeDetails()
 
