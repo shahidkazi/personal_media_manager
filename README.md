@@ -22,7 +22,9 @@ So enjoy collecting and managing your Movies and TV Series...<br/><br/>
 - Fixed issues with downloading large sized images from IMDB
 - Added support for Shorts, Video Movies, TV Movies and TV Specials in Movies section when fetching from IMDB
 - Addressed multi-threading issues causing app to crash when fetch IMDB details for a large set
-- Fixed issue with searching by quality<br/><br/>
+- Fixed issue with searching by quality
+- Added sorting support for Movies, Series and Episodes
+- Filters are now enabled by default (earlier disabled)<br/><br/>
 
 # Current Features
 
@@ -87,7 +89,6 @@ Current releases are for Mac OS only, Windows and Linux coming soon. If you are 
 
 # What's planned for the future
 
-- Support for sorting by different dimensions
 - Support for backing up and restoring database from your personal cloud
 - Releases for Windows and Linux
 - Updating app from within instead of having to manually rebuild/replace with DB backup<br/><br/>
