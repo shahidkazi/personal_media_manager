@@ -1102,7 +1102,7 @@ class MainWindow(QMainWindow):
             self.ui.chkWatched.setChecked(False)
             self.ui.chkWatchedEpisode.setChecked(False)
             self.ui.chkWatchedSeason.setChecked(False)
-            self.ui.chkApplyFilter.setChecked(False)
+            self.ui.chkApplyFilter.setChecked(True)
 
             self.ui.lsGenres.clear()
             self.ui.lsLanguages.clear()
