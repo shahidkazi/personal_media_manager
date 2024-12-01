@@ -169,7 +169,11 @@ def get_series_episodes(series_id : int, season=None) -> pd.DataFrame:
 
     query = dbqueries.QUERY_GET_SERIES_EPISODES.format(id=series_id, where_clause=where_clause)
 
-    return convert_bool_cols(execute_read(query))
+    df_episodes = convert_bool_cols(execute_read(query))
+    df_episodes['EPISODE'] = df_episodes['EPISODE'].astype(str)
+    df_episodes['EPISODE'] = df_episodes['EPISODE'].apply(lambda x: f'0{x}' if len(x) == 1 else x)
+
+    return df_episodes
 
 
 def get_episode_details(episode_id : int) -> pd.DataFrame:

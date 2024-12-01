@@ -686,9 +686,12 @@ class MainWindow(QMainWindow):
                     data.columns.get_loc(col), 
                     EPISODES_CUSTOM_COL_WIDTHS[col] )
 
-            title_idx = data.columns.get_loc(MEDIA_COLUMNS.TITLE)
-            self.ui.tblEpisodes.sortByColumn(title_idx, Qt.AscendingOrder)
-            self.ui.tblEpisodes.horizontalHeader().setSectionResizeMode(title_idx, QHeaderView.Stretch)
+            self.ui.tblEpisodes.sortByColumn(
+                data.columns.get_loc(EPISODE_COLUMNS.SEASON), 
+                Qt.AscendingOrder)
+            self.ui.tblEpisodes.horizontalHeader().setSectionResizeMode(
+                data.columns.get_loc(MEDIA_COLUMNS.TITLE), 
+                QHeaderView.Stretch)
             
             self.resetEpisodeDetails()
 
