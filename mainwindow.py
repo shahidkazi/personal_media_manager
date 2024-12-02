@@ -130,6 +130,8 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        self.loading = True
+
         self.setupActions()
         self.setupFilters()
         self.setupMovies()
@@ -157,6 +159,8 @@ class MainWindow(QMainWindow):
 
         self.displaySeries()
         self.displayMovies()
+
+        self.loading = False
 
 
     def setupActions(self) -> None:
@@ -426,7 +430,7 @@ class MainWindow(QMainWindow):
         return filters
 
 
-    def displayMovies(self) -> None:
+    def displayMovies(self, updateScroll=True) -> None:
         """
         Displays a list of movies in a table format within the user interface.
 
@@ -467,12 +471,13 @@ class MainWindow(QMainWindow):
             self.ui.tblMovies.horizontalHeader().setSectionResizeMode(title_idx, QHeaderView.Stretch)
             
             self.ui.tblMovies.selectionModel().selectionChanged.connect(self.displayMovieDetails)
-            if self.ui.tbSummary.currentIndex() == 0 and self.ui.tblMovies.model().rowCount() > 0:
-                self.ui.tblMovies.selectRow(curr_idx)
-                self.ui.tblMovies.setFocus()
+            if updateScroll:
+                if self.ui.tbSummary.currentIndex() == 0 and self.ui.tblMovies.model().rowCount() > 0:
+                    self.ui.tblMovies.selectRow(curr_idx)
+                    self.ui.tblMovies.setFocus()
 
-            self.ui.tblMovies.verticalScrollBar().setValue(v_scroll_pos)
-            self.ui.tblMovies.horizontalScrollBar().setValue(h_scroll_pos)
+                self.ui.tblMovies.verticalScrollBar().setValue(v_scroll_pos)
+                self.ui.tblMovies.horizontalScrollBar().setValue(h_scroll_pos)
 
             self.total_movies = total
             self.writeStats(len(df), total)
@@ -480,7 +485,7 @@ class MainWindow(QMainWindow):
             self.writeStatus(f'displayMovies: {e}', MESSAGE_TYPE.ERROR)
 
 
-    def displaySeries(self) -> None:
+    def displaySeries(self, updateScroll=True) -> None:
         """
         Displays a series of media items in a table view within the user interface.
 
@@ -521,12 +526,13 @@ class MainWindow(QMainWindow):
             self.ui.tblSeries.horizontalHeader().setSectionResizeMode(title_idx, QHeaderView.Stretch)
             
             self.ui.tblSeries.selectionModel().selectionChanged.connect(self.displaySeriesDetails)
-            if self.ui.tbSummary.currentIndex() == 1 and self.ui.tblSeries.model().rowCount() > 0:
-                self.ui.tblSeries.selectRow(curr_idx)
-                self.ui.tblSeries.setFocus()
+            if updateScroll:
+                if self.ui.tbSummary.currentIndex() == 1 and self.ui.tblSeries.model().rowCount() > 0:
+                    self.ui.tblSeries.selectRow(curr_idx)
+                    self.ui.tblSeries.setFocus()
 
-            self.ui.tblSeries.verticalScrollBar().setValue(v_scroll_pos)
-            self.ui.tblSeries.horizontalScrollBar().setValue(h_scroll_pos)
+                self.ui.tblSeries.verticalScrollBar().setValue(v_scroll_pos)
+                self.ui.tblSeries.horizontalScrollBar().setValue(h_scroll_pos)
 
             self.total_series = total
             self.writeStats(len(df), total, MEDIA_TYPE.SERIES)
@@ -615,7 +621,7 @@ class MainWindow(QMainWindow):
                 self.ui.cbEdition.setCurrentIndex(0)
 
             if details[MEDIA_COLUMNS.QUALITY][0]:
-                self.ui.cbQuality.setCurrentText(details[MOVIE_COLUMNS.SOURCE][0])
+                self.ui.cbQuality.setCurrentText(details[META_COLUMNS.QUALITY][0])
             else:
                 self.ui.cbQuality.setCurrentIndex(0)
 
@@ -936,6 +942,8 @@ class MainWindow(QMainWindow):
             self.ui.lblSeasons.setVisible(i == 1)
             self.ui.txtSeasons.setVisible(i == 1)
 
+            self.ui.cbFilterQuality.setEnabled(self.ui.chkApplyFilter.isChecked() and self.ui.tbSummary.currentIndex() == 0)
+
             self.writeStats(
                 self.ui.tblMovies.model().rowCount() if i == 0 else self.ui.tblSeries.model().rowCount(), 
                 self.total_movies if i == 0 else self.total_series, 
@@ -957,14 +965,15 @@ class MainWindow(QMainWindow):
         for either movies or series based on the current tab selection.
         """
         try:
-            self.displaySeries()
-            self.displayMovies()
+            if not self.loading:
+                self.displaySeries(updateScroll=False)
+                self.displayMovies(updateScroll=False)
 
-            i = self.ui.tbSummary.currentIndex()
-            self.writeStats(
-                self.ui.tblMovies.model().rowCount() if i == 0 else self.ui.tblSeries.model().rowCount(), 
-                self.total_movies if i == 0 else self.total_series, 
-                MEDIA_TYPE.MOVIE if i == 0 else MEDIA_TYPE.SERIES )
+                i = self.ui.tbSummary.currentIndex()
+                self.writeStats(
+                    self.ui.tblMovies.model().rowCount() if i == 0 else self.ui.tblSeries.model().rowCount(), 
+                    self.total_movies if i == 0 else self.total_series, 
+                    MEDIA_TYPE.MOVIE if i == 0 else MEDIA_TYPE.SERIES )
         except Exception as e:
             self.writeStatus(f'refreshMedia: {e}', MESSAGE_TYPE.ERROR)
 
@@ -1102,7 +1111,7 @@ class MainWindow(QMainWindow):
             self.ui.chkWatched.setChecked(False)
             self.ui.chkWatchedEpisode.setChecked(False)
             self.ui.chkWatchedSeason.setChecked(False)
-            self.ui.chkApplyFilter.setChecked(True)
+            self.ui.chkApplyFilter.setChecked(False)
 
             self.ui.lsGenres.clear()
             self.ui.lsLanguages.clear()
@@ -1270,16 +1279,16 @@ class MainWindow(QMainWindow):
         series_details = {}
 
         try:
-            series_details[EPISODE_COLUMNS.SEASON]       = season
-            series_details[EPISODE_COLUMNS.EPISODE]      = self.ui.txtEpisodeNo.text()
-            series_details[MEDIA_COLUMNS.TITLE]          = self.ui.txtEpisodeTitle.text()
-            series_details[MEDIA_COLUMNS.PLOT]           = self.ui.txtEpisodePlot.toPlainText()
+            series_details[EPISODE_COLUMNS.SEASON]       = int(season)
+            series_details[EPISODE_COLUMNS.EPISODE]      = int(self.ui.txtEpisodeNo.text().strip())
+            series_details[MEDIA_COLUMNS.TITLE]          = self.ui.txtEpisodeTitle.text().strip()
+            series_details[MEDIA_COLUMNS.PLOT]           = self.ui.txtEpisodePlot.toPlainText().strip()
             series_details[EPISODE_COLUMNS.WATCHED]      = 1 if self.ui.chkWatchedEpisode.isChecked() else 0
             series_details[EPISODE_COLUMNS.QUALITY_ID]   = self.ui.cbQuality.currentData()
             series_details[EPISODE_COLUMNS.TO_BURN]      = 1 if self.ui.chkEpisodeToBurn.isChecked() else 0
-            series_details[EPISODE_COLUMNS.BACKUP_DISC]  = self.ui.txtEpisodeDiscNo.text()
-            series_details[EPISODE_COLUMNS.TAG]          = self.ui.txtEpisodeTags.text()
-            series_details[EPISODE_COLUMNS.SIZE]         = self.ui.txtEpisodeSize.text()
+            series_details[EPISODE_COLUMNS.BACKUP_DISC]  = self.ui.txtEpisodeDiscNo.text().strip()
+            series_details[EPISODE_COLUMNS.TAG]          = self.ui.txtEpisodeTags.text().strip()
+            series_details[EPISODE_COLUMNS.SIZE]         = self.ui.txtEpisodeSize.text().strip()
             series_details[EPISODE_COLUMNS.ID]           = episode_id
         except Exception as e:
             self.writeStatus(f'getSeriesEpisode: {e}', MESSAGE_TYPE.ERROR)

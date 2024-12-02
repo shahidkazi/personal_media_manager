@@ -15,6 +15,7 @@ from utils.constants   import (
     MEDIA_COLUMNS,
     SERIES_COLUMNS,
     FILTER_COLUMNS,
+    EPISODE_COLUMNS,
     META_COLUMNS,
     APP_CONFIG,
     MEDIA_BOOLEAN_COLUMNS,
@@ -170,8 +171,10 @@ def get_series_episodes(series_id : int, season=None) -> pd.DataFrame:
     query = dbqueries.QUERY_GET_SERIES_EPISODES.format(id=series_id, where_clause=where_clause)
 
     df_episodes = convert_bool_cols(execute_read(query))
-    df_episodes['EPISODE'] = df_episodes['EPISODE'].astype(str)
-    df_episodes['EPISODE'] = df_episodes['EPISODE'].apply(lambda x: f'0{x}' if len(x) == 1 else x)
+
+    for col in [EPISODE_COLUMNS.EPISODE, EPISODE_COLUMNS.SEASON]:
+        df_episodes[col] = df_episodes[col].astype(str)
+        df_episodes[col] = df_episodes[col].apply(lambda x: f'0{x}' if len(x) == 1 else x)
 
     return df_episodes
 

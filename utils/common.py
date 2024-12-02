@@ -57,8 +57,8 @@ def getStatusStyleSheet(message_type=MESSAGE_TYPE.INFO) -> str:
     Returns:
     str: A CSS style string for the given message type.
     """
-    return ''            if message_type == MESSAGE_TYPE.INFO \
-      else 'color: red;' if message_type == MESSAGE_TYPE.WARNING \
-      else 'color: red;font-weight:bold;'
+    return ''               if message_type == MESSAGE_TYPE.INFO \
+      else 'color: orange;' if message_type == MESSAGE_TYPE.WARNING \
+      else 'color: red;'
 
 #=======================================================================

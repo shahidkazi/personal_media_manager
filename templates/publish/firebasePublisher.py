@@ -16,15 +16,15 @@ from utils.constants import MEDIA_TYPE, MEDIA_COLUMNS, MEDIA_DETAILS, EPISODE_CO
 from templates.exportdata.exportCSV import export
 
 #=======================================================================
-FIREBASE_SITE_ID    = 'personal-media-db'
-WEB_APP_LOCATION    = '/Users/default/Downloads/Apps'
+FIREBASE_SITE_ID    = 'personal-mdb'
+WEB_APP_LOCATION    = '/Users/shahidkazi/Downloads/Apps'
 
 INDEX_TEMPLATE      = f'{WEB_APP_LOCATION}/movies/templates/index_template.html'
 RES_MOVIE_SUMMARY   = f'{WEB_APP_LOCATION}/movies/data/results_summary.txt'
-RES_MOVIE_DASHBOARD = f'{WEB_APP_LOCATION}/movies/data/results_{0}.txt'
-RES_MOVIE_DETAIL    = f'{WEB_APP_LOCATION}/movies/data/{0}.txt'
+RES_MOVIE_DASHBOARD = '{0}/movies/data/results_{1}.txt'
+RES_MOVIE_DETAIL    = '{0}/movies/data/{1}.txt'
 RES_SHOW_SUMNMARY   = f'{WEB_APP_LOCATION}/movies/data/results_shows.txt'
-RES_SHOW_DETAIL     = f'{WEB_APP_LOCATION}/movies/data/{0}.txt'
+RES_SHOW_DETAIL     = '{0}/movies/data/{1}.txt'
 
 col_rename      = {
     MEDIA_COLUMNS.ID               : 'TMDBID',
@@ -110,34 +110,29 @@ def generate_movie_results(df : pd.DataFrame, df_4k : pd.DataFrame, df_hd : pd.D
         df_4k (pd.DataFrame): DataFrame filtered for 4K quality movies.
         df_hd (pd.DataFrame): DataFrame filtered for non-4K (1080p) movies.
     """
-    try:
-        print('----- Generating Results ---------')
+    print('----- Generating Results ---------')
 
-        # Columns to include in the summary results
-        results_cols = ['TMDBID', 'Title', 'Year', 'Genre', 'Watched', 'ToBurn', 'Note']
-        config       = {'4K': df_4k, '1080p': df_hd}
+    # Columns to include in the summary results
+    results_cols = ['TMDBID', 'Title', 'Year', 'Genre', 'Watched', 'ToBurn', 'Note']
+    config       = {'4K': df_4k, '1080p': df_hd}
 
-        # Generate and write dashboard results for each quality level
-        for quality, df_quality in config.items():
-            df_summary = df_quality[results_cols].copy()
-            write_results(df_summary, RES_MOVIE_DASHBOARD.format(quality))
+    # Generate and write dashboard results for each quality level
+    for quality, df_quality in config.items():
+        df_summary = df_quality[results_cols].copy()
+        write_results(df_summary, RES_MOVIE_DASHBOARD.format(WEB_APP_LOCATION, quality))
 
-        print('----- Creating Detail Data ------')
+    print('----- Creating Detail Data ------')
 
-        # Columns to include in the detailed movie data
-        results_cols = [
-            'TMDBID', 'IMDBID', 'Title', 'Year', 'Genre', 'Watched', 'ToBurn', 
-            'Rating', 'UserRating', 'Note', 'Size', 'Poster', 'Plot'
-        ]
+    # Columns to include in the detailed movie data
+    results_cols = [
+        'TMDBID', 'IMDBID', 'Title', 'Year', 'Genre', 'Watched', 'ToBurn', 
+        'Rating', 'UserRating', 'Note', 'Size', 'Poster', 'Plot'
+    ]
 
-        # Generate and write detailed results for each movie
-        df_details = df[results_cols].copy()
-        for _, row in df_details.iterrows():
-            write_results(row.to_frame().T, RES_MOVIE_DETAIL.format(str(row['TMDBID'])))
-    except KeyError as e:
-        print(f"KeyError: Missing column - {e}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    # Generate and write detailed results for each movie
+    df_details = df[results_cols].copy()
+    for _, row in df_details.iterrows():
+        write_results(row.to_frame().T, RES_MOVIE_DETAIL.format(WEB_APP_LOCATION, str(row['TMDBID'])))
 
 
 def generate_series_results(df : pd.DataFrame):
@@ -176,7 +171,7 @@ def generate_series_results(df : pd.DataFrame):
 
     for _, row in df_shows.iterrows():
         filtered_df = df_episodes[df_episodes['TMDBID'] == row['TMDBID']]
-        write_results(filtered_df, RES_SHOW_DETAIL.format(row['TMDBID']))
+        write_results(filtered_df, RES_SHOW_DETAIL.format(WEB_APP_LOCATION, row['TMDBID']))
 
     write_results(df_shows, RES_SHOW_SUMNMARY)
 
@@ -223,28 +218,14 @@ def publishContent() -> bool:
     import subprocess
 
     command = ["firebase", "deploy", "--only", f"hosting:{FIREBASE_SITE_ID}"]
-
-    try:
-        result = subprocess.run(
-            command,
-            capture_output = True,
-            text           = True,
-            check          = True,
-            cwd            = WEB_APP_LOCATION
-        )
-        print(result.stdout)
-    except subprocess.CalledProcessError as e:
-        print("Deployment failed!")
-        print(f"Error: {e.stderr}")
-        return False
-    except FileNotFoundError as e:
-        print("Firebase CLI not found. Make sure it's installed and in your PATH.")
-        print(f"Error: {e}")
-        return False
-    except Exception as e:
-        print("An unexpected error occurred during deployment.")
-        print(f"Error: {e}")
-        return False
+    result = subprocess.run(
+        command,
+        capture_output = True,
+        text           = True,
+        check          = True,
+        cwd            = WEB_APP_LOCATION
+    )
+    print(result.stdout)
 
     return True
 
