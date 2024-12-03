@@ -218,6 +218,10 @@ QUERY_GET_SERIES                = '''SELECT t.ID,
                                              (SELECT COUNT(DISTINCT SEASON) 
                                               FROM TV_SERIES_EPISODES 
                                               WHERE SERIES_ID = t.ID), 0) AS SEASONS,
+                                            (SELECT DISTINCT BACKUP_DISC 
+                                             FROM TV_SERIES_EPISODES 
+                                             WHERE BACKUP_DISC IS NOT NULL
+                                             ORDER BY BACKUP_DISC) AS BACKUP_DISC,
                                             t.CREATED_DATE
                                      FROM TV_SERIES t
                                        LEFT JOIN MEDIA_SOURCE s ON t.SOURCE_ID  = s.ID

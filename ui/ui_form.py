@@ -273,13 +273,12 @@ class Ui_MainWindow(object):
         self.cbFilterGenres.setEditable(False)
         self.horizontalLayout_4.addWidget(self.cbFilterGenres)
 
-        self.cbFilterDiscNo = QComboBox(self.groupBox_2)
-        self.cbFilterDiscNo.addItem("")
-        self.cbFilterDiscNo.setObjectName(u"cbFilterDiscNo")
-        self.cbFilterDiscNo.setEnabled(False)
-        sizePolicy2.setHeightForWidth(self.cbFilterDiscNo.sizePolicy().hasHeightForWidth())
-        self.cbFilterDiscNo.setSizePolicy(sizePolicy2)
-        self.horizontalLayout_4.addWidget(self.cbFilterDiscNo)
+        self.txtFilterDiscNo = QLineEdit(self.groupBox_2)
+        self.txtFilterDiscNo.setObjectName(u"txtFilterDiscNo")
+        self.txtFilterDiscNo.setEnabled(False)
+        sizePolicy2.setHeightForWidth(self.txtFilterDiscNo.sizePolicy().hasHeightForWidth())
+        self.txtFilterDiscNo.setSizePolicy(sizePolicy2)
+        self.horizontalLayout_4.addWidget(self.txtFilterDiscNo)
 
         self.btnMoreFilters = QToolButton(self.groupBox_2)
         self.btnMoreFilters.setObjectName(u"btnMoreFilters")
@@ -1225,8 +1224,6 @@ class Ui_MainWindow(object):
         
         self.cbFilterGenres.setItemText(0, QCoreApplication.translate("MainWindow", u"All Genres", None))
         self.cbFilterGenres.setCurrentText(QCoreApplication.translate("MainWindow", u"All Genres", None))
-        
-        self.cbFilterDiscNo.setItemText(0, QCoreApplication.translate("MainWindow", u"All Discs", None))
         
         self.btnMoreFilters.setToolTip(QCoreApplication.translate("MainWindow", u"More Filters...", None))
         self.btnAddNewEpisode.setToolTip(QCoreApplication.translate("MainWindow", u"Add New Episode", None))

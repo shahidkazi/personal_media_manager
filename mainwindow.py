@@ -65,7 +65,6 @@ class MainWindow(QMainWindow):
         setSourceComboBox()                : Populates the source combo box with available media sources.
         setEditionComboBox()               : Populates the edition combo box with available media editions.
         setQualityComboBoxes()             : Populates quality combo boxes with available media qualities.
-        setDiscFilterComboBox()            : Populates the disc filter combo box with available discs.
         get_filters()                      : Retrieves the current filter settings.
         displayMovies()                    : Displays the list of movies based on current filters.
         displaySeries()                    : Displays the list of series based on current filters.
@@ -155,7 +154,8 @@ class MainWindow(QMainWindow):
         self.setSourceComboBox()
         self.setEditionComboBox()
         self.setQualityComboBoxes()
-        self.setDiscFilterComboBox()
+        self.ui.txtFilterDiscNo.setPlaceholderText('Disc #')
+        self.ui.txtFilterTitle.setPlaceholderText('Search Title')
 
         self.displaySeries()
         self.displayMovies()
@@ -202,7 +202,7 @@ class MainWindow(QMainWindow):
         self.ui.chkApplyFilter.stateChanged.connect(self.toggleFilter)
         self.ui.cbFilterWatched.currentIndexChanged.connect(self.refreshMedia)
         self.ui.cbFilterGenres.currentIndexChanged.connect(self.refreshMedia)
-        self.ui.cbFilterDiscNo.currentIndexChanged.connect(self.refreshMedia)
+        self.ui.txtFilterDiscNo.textChanged.connect(self.refreshMedia)
         self.ui.cbFilterQuality.currentIndexChanged.connect(self.refreshMedia)
         self.ui.txtFilterTitle.textChanged.connect(self.refreshMedia)
         self.ui.btnMoreFilters.clicked.connect(self.onMoreFiltersTriggered)
@@ -364,25 +364,6 @@ class MainWindow(QMainWindow):
             self.writeStatus(f'setQuality: {e}', MESSAGE_TYPE.ERROR)
 
 
-    def setDiscFilterComboBox(self) -> None:
-        """
-        Updates the disc filter combo box in the user interface with available disc numbers.
-
-        This method clears the current items in the combo box and adds a default item 'All Discs'.
-        It then retrieves disc data based on the current media type (either MOVIE or SERIES) and
-        populates the combo box with the backup disc numbers from the retrieved data.
-        """
-        try:
-            self.ui.cbFilterDiscNo.clear()
-            self.ui.cbFilterDiscNo.addItem('All Discs')
-
-            data = model.get_discs(MEDIA_TYPE.MOVIE if self.ui.tbSummary.currentIndex() == 0 else MEDIA_TYPE.SERIES)
-            for _, row in data.iterrows():
-                self.ui.cbFilterDiscNo.addItem(row[MEDIA_COLUMNS.BACKUP_DISC])
-        except Exception as e:
-            self.writeStatus(f'setDiscFilter: {e}', MESSAGE_TYPE.ERROR)
-
-
     def get_filters(self, isSeries=False) -> dict:
         """
         Constructs a dictionary of filters based on the current state of the UI elements.
@@ -416,8 +397,8 @@ class MainWindow(QMainWindow):
                 if self.ui.cbFilterGenres.currentIndex() > 0:
                     filters[FILTER_COLUMNS.GENRE] = self.ui.cbFilterGenres.currentData()
 
-                if self.ui.cbFilterDiscNo.currentIndex() > 0:
-                    filters[FILTER_COLUMNS.BACKUP_DISC] = self.ui.cbFilterDiscNo.currentText()
+                if len(self.ui.txtFilterDiscNo.text().strip()) > 0:
+                    filters[FILTER_COLUMNS.BACKUP_DISC] = self.ui.txtFilterDiscNo.text().strip()
 
                 if self.ui.cbFilterQuality.isEnabled() and self.ui.cbFilterQuality.currentIndex() > 0 and not isSeries:
                     filters[FILTER_COLUMNS.QUALITY] = self.ui.cbFilterQuality.currentData()
@@ -903,15 +884,16 @@ class MainWindow(QMainWindow):
 
             self.ui.cbFilterWatched.setEnabled(status)
             self.ui.cbFilterGenres.setEnabled(status)
-            self.ui.cbFilterDiscNo.setEnabled(status)
+            self.ui.txtFilterDiscNo.setEnabled(status)
             self.ui.cbFilterQuality.setEnabled(status and self.ui.tbSummary.currentIndex() == 0)
             self.ui.btnMoreFilters.setEnabled(status)
+
 
             if not status:
                 self.ui.cbFilterWatched.setCurrentIndex(0)
                 self.ui.cbFilterGenres.setCurrentIndex(0)
                 self.ui.cbFilterQuality.setCurrentIndex(0)
-                self.ui.cbFilterDiscNo.setCurrentIndex(0)
+                self.ui.txtFilterDiscNo.setPlaceholderText('Disc #')
                 self.additional_filters = {}
 
                 if self.ui.tbSummary.currentIndex() == 0:
@@ -941,8 +923,6 @@ class MainWindow(QMainWindow):
             self.ui.tabWidget.setTabVisible(2, i == 1)
             self.ui.lblSeasons.setVisible(i == 1)
             self.ui.txtSeasons.setVisible(i == 1)
-
-            self.ui.cbFilterQuality.setEnabled(self.ui.chkApplyFilter.isChecked() and self.ui.tbSummary.currentIndex() == 0)
 
             self.writeStats(
                 self.ui.tblMovies.model().rowCount() if i == 0 else self.ui.tblSeries.model().rowCount(), 

@@ -86,7 +86,7 @@ def get_media(media_type : MEDIA_TYPE, filters : dict) -> tuple:
         if filter in meta_query_mapping:
             where_clause += '{0} IN ({1})'.format(filters[filter], meta_query_mapping[filter][media_type])
 
-        elif filter in [FILTER_COLUMNS.TITLE, FILTER_COLUMNS.DIRECTOR]:
+        elif filter in [FILTER_COLUMNS.TITLE, FILTER_COLUMNS.DIRECTOR, FILTER_COLUMNS.BACKUP_DISC]:
             where_clause += '{0} LIKE "%{1}%"'.format(MEDIA_FILTER_COLUMNS[media_type][filter], filters[filter])
 
         elif filter == FILTER_COLUMNS.ACTOR:

@@ -181,7 +181,7 @@ MEDIA_FILTER_COLUMNS           = { MEDIA_TYPE.MOVIE : {
                                        FILTER_COLUMNS.YEAR        : 'm.YEAR'
                                    },
                                    MEDIA_TYPE.SERIES : {
-                                       FILTER_COLUMNS.BACKUP_DISC : 't.BACKUP_DISC',
+                                       FILTER_COLUMNS.BACKUP_DISC : 'BACKUP_DISC',
                                        FILTER_COLUMNS.SOURCE      : 't.SOURCE_ID',
                                        FILTER_COLUMNS.TO_BURN     : 'TO_BURN',
                                        FILTER_COLUMNS.WATCHED     : 't.WATCHED',
