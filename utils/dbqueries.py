@@ -214,7 +214,10 @@ QUERY_GET_SERIES                = '''SELECT t.ID,
                                                 ELSE 0 
                                             END AS TO_BURN,
                                             t.RATING,
-                                            IFNULL (t.SEASONS, '') AS SEASONS,
+                                            IFNULL(
+                                             (SELECT COUNT(DISTINCT SEASON) 
+                                              FROM TV_SERIES_EPISODES 
+                                              WHERE SERIES_ID = t.ID), 0) AS SEASONS,
                                             t.CREATED_DATE
                                      FROM TV_SERIES t
                                        LEFT JOIN MEDIA_SOURCE s ON t.SOURCE_ID  = s.ID
@@ -248,8 +251,8 @@ QUERY_GET_SERIES_EPISODES       = '''SELECT t.ID,
                                             t.EPISODE,
                                             t.TITLE,
                                             t.WATCHED,
-                                            t.BACKUP_DISC,
-                                            t.SIZE
+                                            IFNULL(t.BACKUP_DISC, '') AS BACKUP_DISC,
+                                            IFNULL(t.SIZE, '') AS SIZE
                                      FROM TV_SERIES_EPISODES t
                                      WHERE t.SERIES_ID = {id}
                                      {where_clause}

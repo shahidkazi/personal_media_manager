@@ -792,22 +792,13 @@ class Ui_MainWindow(object):
         self.horizontalLayout_27.addWidget(self.chkWatchedSeason)
         
         self.formLayout_4.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout_27)
-        self.verticalLayout_21.addLayout(self.formLayout_4)
-        self.verticalLayout_16.addWidget(self.groupBox_4)
-        self.verticalLayout_19.addLayout(self.verticalLayout_16)
 
-        self.verticalLayout_17 = QVBoxLayout()
-        self.verticalLayout_17.setObjectName(u"verticalLayout_17")
-
-        self.groupBox_5 = QGroupBox(self.tabEpisodes)
-        self.groupBox_5.setObjectName(u"groupBox_5")
-
-        self.horizontalLayout_13 = QHBoxLayout(self.groupBox_5)
+        self.horizontalLayout_13 = QHBoxLayout()
         self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
 
-        self.tblEpisodes = QTableView(self.groupBox_5)
+        self.tblEpisodes = QTableView(self.groupBox_4)
         self.tblEpisodes.setObjectName(u"tblEpisodes")
-        self.tblEpisodes.setMinimumSize(QSize(450, 0))
+        self.tblEpisodes.setMinimumSize(QSize(450, 267))
         self.tblEpisodes.setAlternatingRowColors(True)
         self.tblEpisodes.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.tblEpisodes.horizontalHeader().setCascadingSectionResizes(False)
@@ -820,24 +811,24 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 20, 0, 20)
 
-        self.btnAddNewEpisode = QToolButton(self.groupBox_5)
+        self.btnAddNewEpisode = QToolButton(self.groupBox_4)
         self.btnAddNewEpisode.setObjectName(u"btnAddNewEpisode")
         self.btnAddNewEpisode.setIcon(icon1)
         self.verticalLayout_3.addWidget(self.btnAddNewEpisode)
 
-        self.btnDeleteEpisode = QToolButton(self.groupBox_5)
+        self.btnDeleteEpisode = QToolButton(self.groupBox_4)
         self.btnDeleteEpisode.setObjectName(u"btnDeleteEpisode")
         self.btnDeleteEpisode.setIcon(icon10)
         self.verticalLayout_3.addWidget(self.btnDeleteEpisode)
 
-        self.btnWatched = QToolButton(self.groupBox_5)
+        self.btnWatched = QToolButton(self.groupBox_4)
         self.btnWatched.setObjectName(u"btnWatched")
         icon14 = QIcon()
         icon14.addFile(u"images/icons/eye-solid.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnWatched.setIcon(icon14)
         self.verticalLayout_3.addWidget(self.btnWatched)
 
-        self.btnNotWatched = QToolButton(self.groupBox_5)
+        self.btnNotWatched = QToolButton(self.groupBox_4)
         self.btnNotWatched.setObjectName(u"btnNotWatched")
         icon15 = QIcon()
         icon15.addFile(u"images/icons/eye-slash-solid.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
@@ -845,8 +836,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.btnNotWatched)
 
         self.horizontalLayout_13.addLayout(self.verticalLayout_3)
-        self.verticalLayout_17.addWidget(self.groupBox_5)
-        self.verticalLayout_19.addLayout(self.verticalLayout_17)
+
+        self.verticalLayout_21.addLayout(self.formLayout_4)
+        self.verticalLayout_21.addLayout(self.horizontalLayout_13)
+        self.verticalLayout_16.addWidget(self.groupBox_4)
+        self.verticalLayout_19.addLayout(self.verticalLayout_16)
 
         self.verticalLayout_18 = QVBoxLayout()
         self.verticalLayout_18.setObjectName(u"verticalLayout_18")
@@ -914,10 +908,16 @@ class Ui_MainWindow(object):
         self.cbEpisodeQuality.setMinimumSize(QSize(227, 0))
         self.horizontalLayout_22.addWidget(self.cbEpisodeQuality)
 
-        self.chkWatchedEpisode = QCheckBox(self.groupBox_6)
-        self.chkWatchedEpisode.setObjectName(u"chkWatchedEpisode")
-        self.chkWatchedEpisode.setMinimumSize(QSize(200, 0))
-        self.horizontalLayout_22.addWidget(self.chkWatchedEpisode)
+        self.label_10 = QLabel(self.groupBox_6)
+        self.label_10.setObjectName(u"label_10")
+        self.horizontalLayout_22.addWidget(self.label_10)
+
+        self.txtEpisodeReleased = QLineEdit(self.groupBox_6)
+        self.txtEpisodeReleased.setObjectName(u"txtEpisodeReleased")
+        self.txtEpisodeReleased.setSizePolicy(sizePolicy5)
+        self.txtEpisodeReleased.setMinimumSize(QSize(202, 21))
+        self.horizontalLayout_22.addWidget(self.txtEpisodeReleased)
+    
         self.formLayout_5.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout_22)
 
         self.backupDiscLabel = QLabel(self.groupBox_6)
@@ -935,8 +935,14 @@ class Ui_MainWindow(object):
 
         self.chkEpisodeToBurn = QCheckBox(self.groupBox_6)
         self.chkEpisodeToBurn.setObjectName(u"chkEpisodeToBurn")
-        self.chkEpisodeToBurn.setMinimumSize(QSize(200, 0))
+        self.chkEpisodeToBurn.setMinimumSize(QSize(130, 0))
         self.horizontalLayout_24.addWidget(self.chkEpisodeToBurn)
+
+        self.chkWatchedEpisode = QCheckBox(self.groupBox_6)
+        self.chkWatchedEpisode.setObjectName(u"chkWatchedEpisode")
+        self.chkWatchedEpisode.setMinimumSize(QSize(100, 0))
+        self.horizontalLayout_24.addWidget(self.chkWatchedEpisode)
+
         self.formLayout_5.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout_24)
 
         self.sizeLabel_2 = QLabel(self.groupBox_6)
@@ -950,26 +956,19 @@ class Ui_MainWindow(object):
         self.txtEpisodeSize.setMinimumSize(QSize(223, 0))
         self.horizontalLayout_25.addWidget(self.txtEpisodeSize)
 
-        self.label_10 = QLabel(self.groupBox_6)
-        self.label_10.setObjectName(u"label_10")
-        self.horizontalLayout_25.addWidget(self.label_10)
-
-        self.txtEpisodeReleased = QLineEdit(self.groupBox_6)
-        self.txtEpisodeReleased.setObjectName(u"txtEpisodeReleased")
-        self.txtEpisodeReleased.setMinimumSize(QSize(202, 0))
-        self.horizontalLayout_25.addWidget(self.txtEpisodeReleased)
-        self.formLayout_5.setLayout(4, QFormLayout.FieldRole, self.horizontalLayout_25)
-
         self.tagsLabel_2 = QLabel(self.groupBox_6)
         self.tagsLabel_2.setObjectName(u"tagsLabel_2")
-        self.formLayout_5.setWidget(5, QFormLayout.LabelRole, self.tagsLabel_2)
+        self.horizontalLayout_25.addWidget(self.tagsLabel_2)
 
         self.txtEpisodeTags = QLineEdit(self.groupBox_6)
         self.txtEpisodeTags.setObjectName(u"txtEpisodeTags")
         sizePolicy7.setHeightForWidth(self.txtEpisodeTags.sizePolicy().hasHeightForWidth())
         self.txtEpisodeTags.setSizePolicy(sizePolicy7)
-        self.txtEpisodeTags.setMinimumSize(QSize(500, 0))
-        self.formLayout_5.setWidget(5, QFormLayout.FieldRole, self.txtEpisodeTags)
+        self.txtEpisodeTags.setMinimumSize(QSize(202, 21))
+        self.horizontalLayout_25.addWidget(self.txtEpisodeTags)
+
+        self.formLayout_5.setLayout(4, QFormLayout.FieldRole, self.horizontalLayout_25)
+
         self.verticalLayout_20.addLayout(self.formLayout_5)
 
         self.line = QFrame(self.groupBox_6)
@@ -978,18 +977,18 @@ class Ui_MainWindow(object):
         self.line.setFrameShadow(QFrame.Shadow.Sunken)
         self.verticalLayout_20.addWidget(self.line)
 
-        self.verticalLayout_23 = QVBoxLayout()
-        self.verticalLayout_23.setObjectName(u"verticalLayout_23")
+        self.horizontlLayout_a23 = QHBoxLayout()
+        self.horizontlLayout_a23.setObjectName(u"horizontlLayout_a23")
         self.label_8 = QLabel(self.groupBox_6)
         self.label_8.setObjectName(u"label_8")
-        self.verticalLayout_23.addWidget(self.label_8)
+        self.horizontlLayout_a23.addWidget(self.label_8)
 
         self.txtEpisodePlot = QPlainTextEdit(self.groupBox_6)
         self.txtEpisodePlot.setObjectName(u"txtEpisodePlot")
-        self.txtEpisodePlot.setMaximumSize(QSize(16777215, 150))
-        self.verticalLayout_23.addWidget(self.txtEpisodePlot)
+        self.txtEpisodePlot.setMaximumSize(QSize(16777215, 100))
+        self.horizontlLayout_a23.addWidget(self.txtEpisodePlot)
 
-        self.verticalLayout_20.addLayout(self.verticalLayout_23)
+        self.verticalLayout_20.addLayout(self.horizontlLayout_a23)
         self.verticalLayout_18.addWidget(self.groupBox_6)
 
         self.verticalLayout_19.addLayout(self.verticalLayout_18)
@@ -1266,7 +1265,6 @@ class Ui_MainWindow(object):
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"All Media on Disc", None))
         self.seasonLabel.setText(QCoreApplication.translate("MainWindow", u"Season", None))
         self.chkWatchedSeason.setText(QCoreApplication.translate("MainWindow", u"Watched Season", None))
-        self.groupBox_5.setTitle(QCoreApplication.translate("MainWindow", u"Episodes", None))
         self.titleLabel_2.setText(QCoreApplication.translate("MainWindow", u"Title", None))
         self.seasonLabel_2.setText(QCoreApplication.translate("MainWindow", u"Season", None))
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"Episode  ", None))
@@ -1276,15 +1274,14 @@ class Ui_MainWindow(object):
         self.chkEpisodeToBurn.setText(QCoreApplication.translate("MainWindow", u"To Burn  ", None))
         self.sizeLabel_2.setText(QCoreApplication.translate("MainWindow", u"Size", None))
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"Released", None))
-        self.tagsLabel_2.setText(QCoreApplication.translate("MainWindow", u"Tags", None))
-        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Plot", None))
+        self.tagsLabel_2.setText(QCoreApplication.translate("MainWindow", u"Tags       ", None))
+        self.label_8.setText(QCoreApplication.translate("MainWindow", u" Plot               ", None))
         self.directorSLabel.setText(QCoreApplication.translate("MainWindow", u"Director(s)", None))
         self.writerSLabel.setText(QCoreApplication.translate("MainWindow", u"Writer(s)", None))
 
         self.menu_File.setTitle(QCoreApplication.translate("MainWindow", u"&File", None))
         self.menuMedia.setTitle(QCoreApplication.translate("MainWindow", u"Media", None))
         self.menuHelp.setTitle(QCoreApplication.translate("MainWindow", u"Help", None))
-        self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Episode Details", None))
 
         self.cbCertification.setItemText(0, QCoreApplication.translate("MainWindow", u"G", None))
         self.cbCertification.setItemText(1, QCoreApplication.translate("MainWindow", u"PG", None))

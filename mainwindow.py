@@ -1289,6 +1289,7 @@ class MainWindow(QMainWindow):
             series_details[EPISODE_COLUMNS.BACKUP_DISC]  = self.ui.txtEpisodeDiscNo.text().strip()
             series_details[EPISODE_COLUMNS.TAG]          = self.ui.txtEpisodeTags.text().strip()
             series_details[EPISODE_COLUMNS.SIZE]         = self.ui.txtEpisodeSize.text().strip()
+            series_details[MEDIA_COLUMNS.RELEASE_DATE]   = self.ui.txtEpisodeReleased.text().strip()
             series_details[EPISODE_COLUMNS.ID]           = episode_id
         except Exception as e:
             self.writeStatus(f'getSeriesEpisode: {e}', MESSAGE_TYPE.ERROR)
@@ -1305,7 +1306,7 @@ class MainWindow(QMainWindow):
         """
         try:
             msg_box = QMessageBox(self)
-            msg_box.setWindowTitle('Updaye Confirmation')
+            msg_box.setWindowTitle('Update Confirmation')
             msg_box.setText('Are you sure you want to update details?')
             msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             msg_box.setDefaultButton(QMessageBox.No)
