@@ -3,6 +3,14 @@
         {
             "Publisher" : "Google Firebase (Personal MDB)",
             "Module"    : "templates.publish.firebasePublisher"
+        },
+        {
+            "Publisher" : "Google Drive Database Publish",
+            "Module"    : "templates.publish.gdDatabasePublisher"
+        },
+        {
+            "Publisher" : "Google Drive Posters Publish",
+            "Module"    : "templates.publish.gdPosterPublisher"
         }
     ]
 }

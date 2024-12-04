@@ -176,7 +176,7 @@ def generate_series_results(df : pd.DataFrame):
     write_results(df_shows, RES_SHOW_SUMNMARY)
 
 
-def generateContent(media_type : MEDIA_TYPE):
+def generate_media_content(media_type : MEDIA_TYPE) -> None:
     """
     Generates content based on the specified media type by exporting data, 
     processing it, and generating summaries and results.
@@ -208,6 +208,14 @@ def generateContent(media_type : MEDIA_TYPE):
     print('----- Complete ------')
 
 
+def generateContent() -> None:
+    """
+    Generates content for both movies and TV series.
+    """
+    generate_media_content(MEDIA_TYPE.MOVIE)
+    generate_media_content(MEDIA_TYPE.SERIES)
+
+
 def publishContent() -> bool:
     """
     Deploys content to Firebase Hosting for the specified website.
@@ -217,7 +225,7 @@ def publishContent() -> bool:
     """
     import subprocess
 
-    command = ["firebase", "deploy", "--only", f"hosting:{FIREBASE_SITE_ID}"]
+    command = ["/usr/local/bin/firebase", "deploy", "--only", f"hosting:{FIREBASE_SITE_ID}"]
     result = subprocess.run(
         command,
         capture_output = True,

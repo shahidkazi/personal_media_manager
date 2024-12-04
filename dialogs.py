@@ -1512,12 +1512,8 @@ class PublishDialog(QDialog):
                                             'Module'].values[0]
             publisher  = importlib.import_module(module)
 
-            self.writeStatus('Extracting movie data...')
-            publisher.generateContent(MEDIA_TYPE.MOVIE)
-            self.progressChanged.emit(25)
-
-            self.writeStatus('Extracting series data...')
-            publisher.generateContent(MEDIA_TYPE.SERIES)
+            self.writeStatus('Extracting data...')
+            publisher.generateContent()
             self.progressChanged.emit(50)
 
             self.writeStatus('Publishing content...')
