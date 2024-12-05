@@ -223,7 +223,11 @@ def publishContent() -> bool:
     Returns:
         bool: True if deployment is successful, False otherwise.
     """
+    import os
     import subprocess
+
+    env = os.environ.copy()
+    env["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
     command = ["/usr/local/bin/firebase", "deploy", "--only", f"hosting:{FIREBASE_SITE_ID}"]
     result = subprocess.run(
@@ -231,7 +235,8 @@ def publishContent() -> bool:
         capture_output = True,
         text           = True,
         check          = True,
-        cwd            = WEB_APP_LOCATION
+        cwd            = WEB_APP_LOCATION,
+        env            = env
     )
     print(result.stdout)
 

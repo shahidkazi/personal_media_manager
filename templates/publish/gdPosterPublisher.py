@@ -14,6 +14,7 @@
 import os
 import shutil
 
+from utils.metahelper              import get_app_config
 from googleapiclient.http          import MediaFileUpload
 from googleapiclient.discovery     import build
 from google.oauth2.service_account import Credentials
@@ -25,7 +26,7 @@ UPLOAD_FOLDER_ID     = '1S5E0vJnggpckQXtCO6F8VmMMuvDzUEaX'
 CREDENTIALS          = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 SERVICE              = build('drive', 'v3', credentials=CREDENTIALS)
 
-SOURCE_DIRECTORY     = 'images/posters'
+SOURCE_DIRECTORY     = get_app_config('DEFAULT_POSTER_PATH')
 BACKUP_FILENAME      = 'pmm_poster_backup.zip'
 BACKUP_PATH          = os.path.join('templates', 'publish', 'temp', BACKUP_FILENAME)
 
