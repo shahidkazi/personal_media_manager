@@ -631,9 +631,7 @@ class FetchDetailsDialog(QDialog):
                                           getColIndexinTableView(self.tblParent, MEDIA_COLUMNS.ID)).data()
             media_title   = media.sibling(media.row(), 
                                           getColIndexinTableView(self.tblParent, MEDIA_COLUMNS.TITLE)).data()
-            year          = media.sibling(media.row(), 
-                                          getColIndexinTableView(self.tblParent, MEDIA_COLUMNS.YEAR)).data()
-            self.ui.txtSearchTitle.setText(media_title + (f' {year}' if year else ''))
+            self.ui.txtSearchTitle.setText(media_title)
         except Exception as e:
             self.writeStatus(f'setSearchText: {e}', MESSAGE_TYPE.ERROR)
 

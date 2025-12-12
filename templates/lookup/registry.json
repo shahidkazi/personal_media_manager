@@ -1,8 +1,8 @@
 {
     "data" : [
         {
-            "Source" : "IMDB",
-            "Module" : "templates.lookup.imdbParser"
+            "Source" : "TMDB",
+            "Module" : "templates.lookup.tmdbParser"
         }
     ]
 }

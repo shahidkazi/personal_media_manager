@@ -281,7 +281,7 @@ class Ui_FetchDetailsDialog(object):
         FetchDetailsDialog.setWindowTitle(QCoreApplication.translate("FetchDetailsDialog", u"Dialog", None))
         self.titleLabel.setText(QCoreApplication.translate("FetchDetailsDialog", u"Search Title", None))
         self.sourceLabel.setText(QCoreApplication.translate("FetchDetailsDialog", u"Online Source", None))
-        self.cbSearchSource.setItemText(0, QCoreApplication.translate("FetchDetailsDialog", u"IMDB", None))
+        self.cbSearchSource.setItemText(0, QCoreApplication.translate("FetchDetailsDialog", u"TMDB", None))
         self.chkDontOverwrite.setText(QCoreApplication.translate("FetchDetailsDialog", u"Do not overwrite existing data", None))
         self.btnFetch.setText(QCoreApplication.translate("FetchDetailsDialog", u"Search", None))
         self.btnFetch.setAutoDefault(False)

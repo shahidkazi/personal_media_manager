@@ -1,2 +1,8 @@
 data/moviedb.db
 templates/publish/key.json
+__pycache__/
+.DS_Store
+templates/lookup/__pycache__/
+.gitignore
+images/posters/movie/1.jpg
+templates/__pycache__/

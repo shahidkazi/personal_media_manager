@@ -185,10 +185,10 @@ def get_season_episodes(series_id : str, season : int) -> pd.DataFrame:
     return pd.DataFrame()
 
 
-# def test():
-#     sdata  = requests.get(IMDB_SEASON_URL.format(media_id=f'tt0944947', season=1)).json()
-#     epdata = requests.get(IMDB_DETAILS_URL.format(media_id=sdata['Episodes'][0]['imdbID']))
-#     print(epdata.json()['Director'])
+def test():
+     sdata  = requests.get(IMDB_SEASON_URL.format(media_id=f'tt0944947', season=1)).json()
+     epdata = requests.get(IMDB_DETAILS_URL.format(media_id=sdata['Episodes'][0]['imdbID']))
+     print(epdata.json()['Director'])
 
 
 #=======================================================================
@@ -197,6 +197,6 @@ def get_season_episodes(series_id : str, season : int) -> pd.DataFrame:
 #print(get_media_cast(1375666))
 #print(search_media('the pirates of the caribbean 1', 'movie'))
 #search_media('The Pirates of the Caribbean 1: The Curse of the Black Pearl', None)
-#get_media_summary('1375666')
+search_media('dark knight')
 #test()
 #=======================================================================
